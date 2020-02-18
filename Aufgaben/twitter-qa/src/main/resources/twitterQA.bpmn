@@ -25,10 +25,6 @@
       <bpmn:incoming>SequenceFlow_03j5nxy</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_03j5nxy" sourceRef="TweetPostenTask" targetRef="TweetGepostetEndEvent" />
-    <bpmn:userTask id="TweetBewertenTask" name="Tweet bewerten">
-      <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:scriptTask id="TweetPostenTask" name="Tweet posten" scriptFormat="javascript">
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
@@ -39,6 +35,10 @@
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
       <bpmn:script>print('Tweet abgewiesen');</bpmn:script>
     </bpmn:scriptTask>
+    <bpmn:manualTask id="TweetBewertenTask" name="Tweet bewerten">
+      <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
+    </bpmn:manualTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TwitterQAProcess">
@@ -97,14 +97,14 @@
         <di:waypoint x="620" y="250" />
         <di:waypoint x="682" y="250" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_16n7uuz_di" bpmnElement="TweetBewertenTask">
-        <dc:Bounds x="260" y="100" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ScriptTask_0l0zm33_di" bpmnElement="TweetPostenTask">
         <dc:Bounds x="520" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ScriptTask_0zs75ys_di" bpmnElement="TweetAbweisenTask">
         <dc:Bounds x="520" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ManualTask_069q34z_di" bpmnElement="TweetBewertenTask">
+        <dc:Bounds x="260" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

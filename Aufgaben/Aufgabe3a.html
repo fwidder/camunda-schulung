@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Run the First JUnit Test</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Run the First JUnit Test</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>The goal of this lab is to build your first JUnit test case for a BPMN 2.0 process with the help of the <a href="https://github.com/camunda/camunda-bpm-assert" target="_blank">camunda-bpm-assert</a> library. You will modify the process to run from start to finish without interruption and then you&rsquo;ll create a JUnit test to see if the process behaves as expected with the data used in the test. You add configurations to the test engine and it&rsquo;s logging output.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Strip down the process to the happy path. Morph the user task to a manual task.</li>
+<li>Prepare your content assist to the camunda-bpm-assert library.</li>
+<li>Add the required dependencies to <code>junit</code> and <code>camunda-bpm-assert</code> and <code>assertj-core</code>.</li>
+<li>Prepare your IDE to handle the static imports of camunda-bpm-assert.</li>
+<li>Create a JUnit test and start a process instance with the variable to approve the tweet. Assert that the process instance is ended right after the start.</li>
+<li>Add a <a href="https://docs.camunda.org/manual/latest/user-guide/process-engine/process-engine-bootstrapping/#configure-process-engine-using-spring-xml" target="_blank">configuration file for the process engine</a> picked up the JUnit rule to use a in memory database.</li>
+<li>Run the JUnit test to see the green bar. Check the output of the scipts in the console.</li>
+<li>Have a look at the Camunda BPM Assert Library <a href="https://github.com/camunda/camunda-bpm-assert/blob/master/docs/User_Guide_BPMN.md" target="_blank">User Guide</a> to get more information about the test library.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>For the first JUnit test, the plan is to start a process instance and have it run through to completion, approving and &lsquo;publishing&rsquo; the tweet. To do that we need to modify the modeled process. Change the <strong>Review tweet</strong> task to a Manual Task using the <strong>Context Pad</strong>. By making an activity a Manual Task it won&rsquo;t stop at <strong>Review Tweet</strong> and wait for a person to complete it, rather it will simply move on to the <strong>Approved?</strong> gateway. As part of the test we&rsquo;ll set a variable for &lsquo;approved&rsquo; in a HashMap before starting a process instance.</p></li>
+
+<li><p>Add the required dependencies to the <strong>pom.xml</strong>, ideally after line 86 which says <code>&lt;!-- Add your own dependencies here, if in compile scope, they are added to the jar --&gt;</code></p>
+
+<pre><code class="language-xml">    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.camunda.bpm.assert&lt;/groupId&gt;
+      &lt;artifactId&gt;camunda-bpm-assert&lt;/artifactId&gt;
+      &lt;version&gt;5.0.0&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+</code></pre></li>
+
+<li><p>Prepare your IDE to handle the static imports of camunda-bpm-assert and assertJ. In Eclipse go to <strong>Window &gt; Preferences &gt; Java &gt; Editor &gt; Content Assist &gt; Favorites &gt; New Type&hellip;</strong> and add the following types: <code>org.camunda.bpm.engine.test.assertions.ProcessEngineTests</code> and <code>org.assertj.core.api.Assertions</code>. Also, go to <strong>Window &gt; Preferences &gt; Java &gt; Code Style &gt; Organize Imports</strong> and set &ldquo;Number of static imports needed for .*&rdquo; to &ldquo;0&rdquo;. IntelliJ should pick up the <strong>pom.xml</strong> updates and prompt you to import the changes.</p></li>
+
+<li><p>Open the JUnit test class from the folder <code>src/test/java</code> and inspect the content.</p></li>
+
+<li><p>Add the static imports for the Assertions and camunda-bpm-assert support into the import section of the class:</p>
+
+<pre><code class="language-java">import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.*;
+import static org.assertj.core.api.Assertions.*;
+</code></pre></li>
+
+<li><p>Add the process to test with the</p>
+
+<pre><code class="language-java">  @Deployment(resources = &quot;your bpmn file.bpmn&quot;)
+</code></pre>
+
+<p>annotation. The annotation has to be added to the <strong>testHappyPath</strong> method. Fill your file name into the resources.</p></li>
+
+<li><p>Add a <code>ProcessEngineRule</code> as a JUnit rule to the test class. Initialize the camunda-bpm-assert library with the process engine from the JUnit rule before each test run.</p>
+
+<pre><code class="language-java">  @Rule
+  public ProcessEngineRule rule = new ProcessEngineRule();
+
+  @Before
+  public void setup() {
+    init(rule.getProcessEngine());
+  }
+</code></pre></li>
+
+<li><p>At the start of the test code, we create a Map of type <code>String, Object</code> to use to put in our variables. Then we use the <code>runtimeService()</code> API to start a Twitter QA process instance using the ID (aka &lsquo;key&rsquo; as you&rsquo;ll see in the API call below) of the process template (TwitterQAProcess). We also provide the <strong>variables</strong> HashMap as an argument to the method. Finally, we utilize our assertion library to make sure that our process has indeed completed.</p>
+
+<pre><code class="language-java">	    // Create a HashMap to put in variables for the process instance
+    Map&lt;String, Object&gt; variables = new HashMap&lt;String, Object&gt;();
+    variables.put(&quot;approved&quot;, true);
+    // Start process with Java API and variables
+    ProcessInstance processInstance = runtimeService().startProcessInstanceByKey(&quot;TwitterQAProcess&quot;, variables);
+    // Make assertions on the process instance
+    assertThat(processInstance).isEnded();
+</code></pre>
+
+<p>The complete class can look like <a href="illustrations-exercise3a.html" target="_blank">this example</a>.</p></li>
+
+<li><p>The process engine used in the rule in the JUnit test above needs to be configured. To do this, open the file named <code>camunda.cfg.xml</code> under <code>src/test/resources</code> and fill it with the content below. This configuration uses an in memory database, emits a full audit (history) trail, uses a configurable expression manager (mocks), and has a placeholder for further extensions (plugins).</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+  &lt;bean id=&quot;processEngineConfiguration&quot; class=&quot;org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration&quot;&gt;
+    &lt;property name=&quot;history&quot; value=&quot;full&quot; /&gt;
+    &lt;property name=&quot;expressionManager&quot;&gt;
+      &lt;bean class=&quot;org.camunda.bpm.engine.test.mock.MockExpressionManager&quot;/&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;processEnginePlugins&quot;&gt;
+      &lt;list&gt;&lt;/list&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre></li>
+
+<li><p>As spring boot defaults the logging level in tests to DEBUG (which is verbose), you can create a logging configuration at <code>src/test/resources</code> with the name <code>logback-test.xml</code>. In this example we configure some levels to be more silent and concentrate on the output of the camunda engine:</p>
+
+<pre><code class="language-xml">&lt;configuration&gt;
+  &lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+    &lt;!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default --&gt;
+    &lt;encoder&gt;
+      &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+  &lt;/appender&gt;
+
+  &lt;root level=&quot;debug&quot;&gt;
+    &lt;appender-ref ref=&quot;STDOUT&quot; /&gt;
+  &lt;/root&gt;
+
+  &lt;logger name=&quot;org.apache.ibatis&quot; level=&quot;info&quot; /&gt;
+  &lt;logger name=&quot;javax.activation&quot; level=&quot;info&quot; /&gt;
+  &lt;logger name=&quot;org.springframework&quot; level=&quot;info&quot; /&gt;
+
+  &lt;logger name=&quot;org.camunda&quot; level=&quot;info&quot; /&gt;
+  &lt;logger name=&quot;org.camunda.bpm.engine.test&quot; level=&quot;debug&quot; /&gt;
+&lt;/configuration&gt;
+</code></pre></li>
+
+<li><p>Run the JUnit test (right click on the <strong>testHappyPath</strong> method and select <strong>Run As &gt; JUnit Test</strong>). You should get a green bar in the JUnit window. Can you see the output of your script task in the console?</p></li>
+
+<li><p>Have a look at the Camunda BPM Assert Library <a href="https://github.com/camunda/camunda-bpm-assert/blob/master/docs/User_Guide_BPMN.md" target="_blank">User Guide</a> to get more information about the test library. Using the Camunda BPM Assert Library will become more important later on as we create more complex tests.</p></li>
+</ol>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+
