@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0tfcp7s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
-  <bpmn:process id="Process_0aqrjqk" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_0t815rs" name="Tweet eingegangen">
+  <bpmn:process id="ProccessTweetBewertung" isExecutable="true">
+    <bpmn:startEvent id="StartEventTweetEingegangen" name="Tweet eingegangen">
       <bpmn:outgoing>SequenceFlow_181j6rg</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="Task_09hj67p" name="Tweet bewerten">
+    <bpmn:task id="TaskTweetBewerten" name="Tweet bewerten">
       <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="SequenceFlow_181j6rg" sourceRef="StartEvent_0t815rs" targetRef="Task_09hj67p" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_087zcsa" name="Tweet ok?">
+    <bpmn:sequenceFlow id="SequenceFlow_181j6rg" sourceRef="StartEventTweetEingegangen" targetRef="TaskTweetBewerten" />
+    <bpmn:exclusiveGateway id="ExclusiveGatewayTweetOkay" name="Tweet ok?">
       <bpmn:incoming>SequenceFlow_1tggmwx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0jyxjid</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1miq7wd</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SequenceFlow_1tggmwx" sourceRef="Task_09hj67p" targetRef="ExclusiveGateway_087zcsa" />
-    <bpmn:task id="Task_0xcighh" name="Tweet abweisen">
+    <bpmn:sequenceFlow id="SequenceFlow_1tggmwx" sourceRef="TaskTweetBewerten" targetRef="ExclusiveGatewayTweetOkay" />
+    <bpmn:task id="TaskTweetAbweisen" name="Tweet abweisen">
       <bpmn:incoming>SequenceFlow_0jyxjid</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="SequenceFlow_0jyxjid" name="nein" sourceRef="ExclusiveGateway_087zcsa" targetRef="Task_0xcighh" />
-    <bpmn:endEvent id="EndEvent_1hkq6s9" name="Tweet abgewiesen">
+    <bpmn:sequenceFlow id="SequenceFlow_0jyxjid" name="nein" sourceRef="ExclusiveGatewayTweetOkay" targetRef="TaskTweetAbweisen" />
+    <bpmn:endEvent id="EndEventTweetAbgewiesen" name="Tweet abgewiesen">
       <bpmn:incoming>SequenceFlow_0o94twe</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0o94twe" sourceRef="Task_0xcighh" targetRef="EndEvent_1hkq6s9" />
-    <bpmn:task id="Task_05pasje" name="Tweet posten">
+    <bpmn:sequenceFlow id="SequenceFlow_0o94twe" sourceRef="TaskTweetAbweisen" targetRef="EndEventTweetAbgewiesen" />
+    <bpmn:task id="TaskTweetPosten" name="Tweet posten">
       <bpmn:incoming>SequenceFlow_1miq7wd</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="SequenceFlow_1miq7wd" name="ja" sourceRef="ExclusiveGateway_087zcsa" targetRef="Task_05pasje" />
-    <bpmn:endEvent id="EndEvent_1dboo3z" name="Tweet gepostet">
+    <bpmn:sequenceFlow id="SequenceFlow_1miq7wd" name="ja" sourceRef="ExclusiveGatewayTweetOkay" targetRef="TaskTweetPosten" />
+    <bpmn:endEvent id="EndEventTweetGepotet" name="Tweet gepostet">
       <bpmn:incoming>SequenceFlow_03j5nxy</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_03j5nxy" sourceRef="Task_05pasje" targetRef="EndEvent_1dboo3z" />
+    <bpmn:sequenceFlow id="SequenceFlow_03j5nxy" sourceRef="TaskTweetPosten" targetRef="EndEventTweetGepotet" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0aqrjqk">
-      <bpmndi:BPMNShape id="StartEvent_0t815rs_di" bpmnElement="StartEvent_0t815rs">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProccessTweetBewertung">
+      <bpmndi:BPMNShape id="StartEvent_0t815rs_di" bpmnElement="StartEventTweetEingegangen">
         <dc:Bounds x="172" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="158" y="165" width="64" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_09hj67p_di" bpmnElement="Task_09hj67p">
+      <bpmndi:BPMNShape id="Task_09hj67p_di" bpmnElement="TaskTweetBewerten">
         <dc:Bounds x="260" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_181j6rg_di" bpmnElement="SequenceFlow_181j6rg">
         <di:waypoint x="208" y="140" />
         <di:waypoint x="260" y="140" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ExclusiveGateway_087zcsa_di" bpmnElement="ExclusiveGateway_087zcsa" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="ExclusiveGateway_087zcsa_di" bpmnElement="ExclusiveGatewayTweetOkay" isMarkerVisible="true">
         <dc:Bounds x="415" y="115" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="415" y="85" width="51" height="14" />
@@ -59,7 +59,7 @@
         <di:waypoint x="360" y="140" />
         <di:waypoint x="415" y="140" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Task_0xcighh_di" bpmnElement="Task_0xcighh">
+      <bpmndi:BPMNShape id="Task_0xcighh_di" bpmnElement="TaskTweetAbweisen">
         <dc:Bounds x="520" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0jyxjid_di" bpmnElement="SequenceFlow_0jyxjid">
@@ -69,7 +69,7 @@
           <dc:Bounds x="482" y="122" width="21" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1hkq6s9_di" bpmnElement="EndEvent_1hkq6s9">
+      <bpmndi:BPMNShape id="EndEvent_1hkq6s9_di" bpmnElement="EndEventTweetAbgewiesen">
         <dc:Bounds x="682" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="671" y="165" width="59" height="27" />
@@ -79,7 +79,7 @@
         <di:waypoint x="620" y="140" />
         <di:waypoint x="682" y="140" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Task_05pasje_di" bpmnElement="Task_05pasje">
+      <bpmndi:BPMNShape id="Task_05pasje_di" bpmnElement="TaskTweetPosten">
         <dc:Bounds x="520" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1miq7wd_di" bpmnElement="SequenceFlow_1miq7wd">
@@ -90,7 +90,7 @@
           <dc:Bounds x="451" y="205" width="9" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1dboo3z_di" bpmnElement="EndEvent_1dboo3z">
+      <bpmndi:BPMNShape id="EndEvent_1dboo3z_di" bpmnElement="EndEventTweetGepotet">
         <dc:Bounds x="682" y="232" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="663" y="275" width="75" height="14" />
