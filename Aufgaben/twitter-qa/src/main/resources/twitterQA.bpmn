@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0tfcp7s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
-  <bpmn:process id="ProccessTweetBewertung" name="TwitterQA" isExecutable="true">
+  <bpmn:process id="TwitterQAProcess" name="TwitterQA" isExecutable="true">
     <bpmn:startEvent id="TweetEingegangenStartEvent" name="Tweet eingegangen">
       <bpmn:outgoing>SequenceFlow_181j6rg</bpmn:outgoing>
     </bpmn:startEvent>
@@ -41,7 +41,7 @@
     </bpmn:scriptTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProccessTweetBewertung">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TwitterQAProcess">
       <bpmndi:BPMNShape id="StartEvent_0t815rs_di" bpmnElement="TweetEingegangenStartEvent">
         <dc:Bounds x="172" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
