@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Run the Prototype on Camunda BPM</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Run the Prototype on Camunda BPM</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>The goal of this lab is to make your Twitter QA process executable
+and run it on the Camunda Spring-Boot application.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Give the process model a meaningful ID and a name.</li>
+<li>Fill all required properties in the property panel of the Camunda Modeler to make the process executable. Model the services as script task with a script just print something to the console. Set the candidate group to <code>management</code> and model the conditions on the sequence flows as <code>approved</code> or <code>not approved</code>.</li>
+<li>Save the process in the <code>src/main/resources</code> directory of your project.</li>
+<li>Restart the spring-boot application.</li>
+<li>Try your process in the tasklist filling the generic forms.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>Be sure Modeler has been started and the Twitter QA process model is open.</p></li>
+
+<li><p>Click on the canvas whitespace if you have not modeled a Pool or click on the Pool head if you have modeled one to put focus on the process.  Expand the <strong>Properties Panel</strong> and enter a more user friendly <strong>Process ID</strong> and <strong>Name</strong>. The <strong>Properties Panel</strong> tab can be found on the right hand side of the screen and can be opened and closed by clicking on it. The <strong>ID</strong> and <strong>Name</strong> can be found near the top of the <strong>General</strong> tab. <strong>ID</strong>s cannot have have spaces in them whereas <strong>Name</strong>s can. In this example we put in <strong>TwitterQAProcess</strong> for the <strong>ID</strong> and <strong>Twitter QA</strong> for the <strong>Name</strong>. Also, be sure the <strong>Executable</strong> checkbox has been <strong>enabled</strong>. Models from Cawemo are not imported as executable. Be sure to check for that.</p></li>
+
+<li><p>Select the <strong>first activity</strong> in the process to bring up the <strong>Context Pad</strong>. The activity might be named something like <strong>Review tweet</strong>. In the <strong>Context Pad</strong> click on the <strong>wrench</strong> icon and select <strong>User Task</strong> to change it into a human task. In the <strong>Properties Panel</strong> of the task set the <strong>Candidate groups</strong> field in the <strong>Properties Panel</strong> to <code>management</code>. See lower right hand corner of the screen shot below. By setting this field, anybody who belongs to the <code>management</code> group will receive this task to complete.</p></li>
+
+<li><p>Next, we need to set the conditions of the outgoing sequence flows from the <strong>exclusive gateway</strong> that asks whether a tweet has been approved or not. Contrary to what you may think, the logic is set on the the outbound sequence flows and not on the gateway itself. Click on the <strong>affirmative</strong> sequence flow (it might be &lsquo;Yes&rsquo; or &lsquo;Approved&rsquo; depending on how you modeled it). In the <strong>Properties Panel</strong> of the affirmative sequence select <strong>Expression</strong> for the <strong>Condition Type</strong> and enter <code>#{approved}</code> for the <strong>Expression</strong>. What this means is that we need to set a boolean variable named <code>approved</code> at the <strong>Review tweet</strong> task and we&rsquo;ll do this later. Be sure to set the <strong>negative</strong> sequence flow to <strong>Condition Type</strong> of <strong>Expression</strong> and the <strong>Expression</strong> to <code>#{not approved}</code>. Another option for the <strong>negative</strong> sequence flow is to set the sequence flow to <strong>Default Flow</strong>. You do that by clicking on the wrench in the <strong>Context Pad</strong> of the <strong>negative</strong> sequence flow and selecting <strong>Default Flow</strong>. Choose one method for the <strong>negative</strong> flow.</p></li>
+
+<li><p>For now we&rsquo;ll use print statements to system out for the next tasks. Later on we&rsquo;ll add actual integrations. Click on the <strong>Publish tweet</strong> task (or whatever you named the affirmative sequence task). In the <strong>Context Pad</strong> click on the <strong>wrench</strong> icon and select <strong>Script Task</strong>. The <strong>Script Task</strong> uses a scroll like icon.  In the <strong>Properties Panel</strong> of the <strong>Publish tweet</strong> task set <strong>Script Format</strong> to <strong>javascript</strong> (it is case insensitive). Leave <strong>Script Type</strong> to <strong>Inline Script</strong> and set the script to: <code>print('Tweet published');</code> Repeat the same for the negative sequence flow task though change the script to something like: <code>print('Tweet rejected');</code></p></li>
+
+<li><p>In order to include the process as part of the application it needs to be saved within your IDE project. In Modeler select <strong>File &gt; Save File As</strong> and navigate to your <code>src/main/resources</code> folder of your project. Be sure to check your IDE to make sure you can see your bpmn file saved to <code>src/main/resources</code> folder.</p></li>
+
+<li><p>If you are running Eclipse, check for autorefresh in the settings. In Eclipse select <strong>Window &gt; Preferences</strong> and then select <strong>General &gt; Workspaces</strong>. Enable <strong>Refresh using native hooks or polling</strong>. Otherwise, if you update the process in Modeler, those changes may not get refreshed in Eclipse. Changes to the process model should get picked up automatically in IntelliJ</p></li>
+
+<li><p>Stop the running application and restart it with the maven command you used from the last exercise.</p></li>
+
+<li><p>Check the output console for a successful start and process deployment.</p></li>
+
+<li><p>Go to Camunda Tasklist by opening a browser and heading to <a href="http://localhost:8080/app/tasklist/" target="_blank">localhost:8080/app/tasklist/</a>.  Login using demo/demo as username and password. Let&rsquo;s test out the process.</p></li>
+
+<li><p>In Tasklist you can start the process by clicking on <strong>Start process</strong> link in the upper right hand corner.</p></li>
+
+<li><p>In the dialog box that appears click on <strong>Twitter QA</strong> (or whatever name you gave it) to start the process. You&rsquo;ll then be presented with a screen to add variables before you start the process. Click on the plus (+) sign and add a variable named <strong>content</strong> of type <strong>String</strong> with some <strong>Value</strong> like My tweet. Click on <strong>Start</strong></p></li>
+
+<li><p>Back in the <strong>Tasklist</strong> refresh your screen or click on the <strong>All Tasks</strong> filter. You should see the <strong>Review tweet</strong> task appear in the list of tasks. If you click on <strong>Review tweet</strong> in this list a generic screen should appear in the right hand pane. Before you can work on the task you must claim it and bring it into your personal tasklist. That way, nobody else can work on it. So, click on the <strong>Claim</strong> link at the right hand side of the form and now you can work on the task.</p></li>
+
+<li><p>On the generic form let&rsquo;s load our available variables. Click on <strong>Load Variables</strong></p></li>
+
+<li><p>We should see the <strong>content</strong> variable. Next, let&rsquo;s add an <strong>approved</strong> boolean. Click on <strong>Add a variable +</strong></p></li>
+
+<li><p>In the line that appears below <strong>content</strong> add a variable named <strong>approved</strong> of type <strong>Boolean</strong> and check it to approve the tweet. Click on <strong>Complete</strong>.</p></li>
+
+<li><p>Go back to your system out console in your IDE and you should see &lsquo;Tweet published&rsquo; in the console.</p></li>
+</ol>
+
+<p><a href="illustrations-exercise2b.html" target="_blank">Illustrated description</a></p>
+
+<h3 id="optional">Optional</h3>
+
+<p>Run it again, this time rejecting the tweet.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

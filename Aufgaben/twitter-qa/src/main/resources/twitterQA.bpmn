@@ -29,12 +29,12 @@
       <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:scriptTask id="TweetPostenTask" name="Tweet posten">
+    <bpmn:scriptTask id="TweetPostenTask" name="Tweet posten" scriptFormat="javascript">
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
       <bpmn:script>print('Tweet gepostet');</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:scriptTask id="TweetAbweisenTask" name="Tweet abweisen">
+    <bpmn:scriptTask id="TweetAbweisenTask" name="Tweet abweisen" scriptFormat="javascript">
       <bpmn:incoming>NeinSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
       <bpmn:script>print('Tweet abgewiesen');</bpmn:script>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Create a Camunda Spring Boot Application</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Create a Camunda Spring Boot Application</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>The goal of this lab is to create a spring boot application with the camunda-spring-boot-starter.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Create a new Maven project from our template at <a href="https://github.com/camunda-consulting/twitter-qa" target="_blank">github.com/camunda-consulting/twitter-qa</a>.</li>
+<li>Import it into your IDE.</li>
+<li>Check if you have access to the Camunda enterprise version. If your company is already an enterprise customer, you may find the dependency <code>org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp-ee:3.4.0</code> in your company maven proxy. Or if you have the credentials to access <a href="https://app.camunda.com/nexus/content/groups/private/" target=_blank><code>https://app.camunda.com/nexus/content/groups/private/</code></a>.</li>
+<li>If you have access to the enterprise version of Camunda, change the <code>camunda.version</code> to the latest enterprise release and the dependency to the Camunda spring-boot starter webapp to <code>camunda-bpm-spring-boot-starter-webapp-ee</code></li>
+<li>Start the <code>CamundaApplication</code> and login to the (empty) Cockpit and Tasklist.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li>Download the <a href="https://github.com/camunda-consulting/twitter-qa/archive/master.zip" target="_blank">project template as a zip file</a> and unzip it to your computer in a folder. This will be your project folder.</li>
+<li>Import the <code>pom.xml</code> as an existing maven project into your IDE.
+
+<ul>
+<li>For the Eclipse IDE use <strong>File &gt; Open Projects from Filesystem</strong>. Click on Directory, point to the parent folder of the pom.xml. The pom.xml should appear as a selection. Click on <strong>Finish</strong></li>
+<li>For IntelliJ use <strong>File &gt; Open</strong> and navigate to the <strong>pom.xml</strong> file unzipped in Step 1. A dialog box should appear to open the pom.xml either as a project or file. Select <strong>Open as Project</strong>.</li>
+</ul></li>
+<li>Check with your Camunda administrator to see if your organization has access to the Enterprise version of Camunda either as a trial or as an actual license.</li>
+<li>If you have access to the Enterprise version, change the <code>camunda.version</code> in the <strong>pom.xml</strong> at <strong>line 14</strong> to the latest enterprise version, e.g. <code>7.12.0-ee</code> like this <code>&lt;camunda.version&gt;7.12.0-ee&lt;/camunda.version&gt;</code>. Ask your instructor about the latest available version.</li>
+<li>If you have access to the enterprise version, change the <code>artifactId</code> of the Camunda spring-boot starter webapp in <strong>line 61</strong> of the <strong>pom.xml</strong> to the Enterprise version by appending <code>-ee</code> to it like this <code>&lt;artifactId&gt;camunda-bpm-spring-boot-starter-webapp-ee&lt;/artifactId&gt;</code>.</li>
+<li>If you&rsquo;ve made the changes to the <strong>pom.xml</strong> to enable the Enterprise version you will need to enable the enterprise repository in the <strong>pom.xml</strong> at <strong>lines</strong> <strong>90-102</strong>. Uncomment the <code>camunda-bpm-nexus-ee</code> repository and comment out the <code>camunda-bpm-nexus</code> repository using the <code>&lt;!-- --&gt;</code> comment tags.</li>
+<li>Run the application
+
+<ul>
+<li>For Eclipse IDE navigate to <strong>src &gt; main &gt; java &gt; com.camunda.training</strong>, right click on the <code>CamundaApplication</code> class and select <strong>Run As &gt; Java Application</strong>. Check the console to confirm the start of the spring boot application.</li>
+<li>For IntelliJ you can either click on the run button as it should have recognized the Camunda application as a runnable resource or you can navigate to <strong>src &gt; main &gt; java &gt; com.camunda.training</strong> and right click and select <strong>Run</strong> on <strong>CamundaApplication</strong>.</li>
+<li>For the command line, navigate to your project folder and enter <code>mvn clean spring-boot:run</code>. Check the output for a successful start of the engine.</li>
+</ul></li>
+<li>Open your browser and point to <a href="http://localhost:8080/app/welcome/default/" target="_blank">localhost:8080/app/welcome/default/</a> and login with the user <code>demo</code> and the password <code>demo</code>.</li>
+<li>Inspect the (empty) Cockpit, Tasklist and Admin.</li>
+<li>Congratulations, you have successfully installed and started a Camunda application using Spring Boot.</li>
+</ol>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+
