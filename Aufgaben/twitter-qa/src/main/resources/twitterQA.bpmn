@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0tfcp7s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0tfcp7s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
   <bpmn:process id="TwitterQAProcess" name="TwitterQA" isExecutable="true">
     <bpmn:startEvent id="TweetEingegangenStartEvent" name="Tweet eingegangen">
       <bpmn:outgoing>SequenceFlow_181j6rg</bpmn:outgoing>
@@ -25,11 +25,6 @@
       <bpmn:incoming>SequenceFlow_03j5nxy</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_03j5nxy" sourceRef="TweetPostenTask" targetRef="TweetGepostetEndEvent" />
-    <bpmn:scriptTask id="TweetPostenTask" name="Tweet posten" scriptFormat="javascript">
-      <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
-      <bpmn:script>print('Tweet gepostet');</bpmn:script>
-    </bpmn:scriptTask>
     <bpmn:scriptTask id="TweetAbweisenTask" name="Tweet abweisen" scriptFormat="javascript">
       <bpmn:incoming>NeinSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
@@ -39,6 +34,10 @@
       <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
     </bpmn:manualTask>
+    <bpmn:serviceTask id="TweetPostenTask" name="Tweet posten" camunda:class="com.camunda.training.CreateTweetDelegate">
+      <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TwitterQAProcess">
@@ -97,14 +96,14 @@
         <di:waypoint x="620" y="250" />
         <di:waypoint x="682" y="250" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ScriptTask_0l0zm33_di" bpmnElement="TweetPostenTask">
-        <dc:Bounds x="520" y="210" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ScriptTask_0zs75ys_di" bpmnElement="TweetAbweisenTask">
         <dc:Bounds x="520" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ManualTask_069q34z_di" bpmnElement="TweetBewertenTask">
         <dc:Bounds x="260" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1p1uy0z_di" bpmnElement="TweetPostenTask">
+        <dc:Bounds x="520" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
