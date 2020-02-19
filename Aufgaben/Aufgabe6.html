@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Add Task Forms and Use the Camunda Tasklist</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Add Task Forms and Use the Camunda Tasklist</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>In this lab you add some simple task forms to your process. Then you are able to click through the process with the Camunda Tasklist. This means our little lab process is completed and working :-)</p>
+
+<p>In order to have forms displayed to the user in the web GUI you have to define what data should be displayed on that forms. The Camunda Tasklist supports four different approaches to task forms: generic forms, generated forms, embedded HTML forms and external Web pages. In this lab we will use embedded HTML forms and create simple HTML pages.</p>
+
+<p>Detailed information on the use of Embedded Forms can be found in the <a href="https://docs.camunda.org/manual/latest/user-guide/task-forms/#embedded-task-forms" target="_blank">User Guide</a> and in the <a href="https://docs.camunda.org/manual/latest/reference/embedded-forms/" target="_blank">Embedded Forms Reference</a>.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Add the HTML forms to your project.</li>
+<li>Bind the forms in the form key to the user tasks and events.</li>
+<li>Restart the process application.</li>
+<li>Start a process instance in the task list and run through it.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li>Create a folder structure named <code>static/forms</code> under <code>src/main/resources</code>.</li>
+
+<li><p>Add an html file for both of the <strong>Review tweet</strong> task and the <strong>Start</strong> event to the <code>src/main/resources/static/forms</code> folder. Use this html snippet template as a starting point for each form. This snippet contains various Camunda Forms SDK directives that simplify access to variables in a process.</p>
+
+<pre><code class="language-html">&lt;form class=&quot;form-horizontal&quot;&gt;
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label class=&quot;control-label col-md-4&quot;&gt;My Label&lt;/label&gt;
+    &lt;div class=&quot;col-md-8&quot;&gt;
+      &lt;input type=&quot;text&quot;
+             cam-variable-name=&quot;variable-name&quot;
+             cam-variable-type=&quot;String&quot;
+             required
+             class=&quot;form-control&quot; /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script cam-script type=&quot;text/form-script&quot;&gt;
+    // custom JavaScript goes here
+  &lt;/script&gt;
+&lt;/form&gt;
+</code></pre></li>
+
+<li><p>Update the html files with the process variables that you specified in the JUnit test. Ask yourself -  do you really need an approved boolean in the start form? Should the tweet to be approved be editable in the approval screen? You can find additional information regarding available form-controls <a href="https://docs.camunda.org/manual/7.10/reference/embedded-forms/controls/" target="_blank">in the User-Guide</a></p></li>
+
+<li><p>Set the <strong>Form Key</strong> in the <strong>Form</strong> tab of the <strong>Properties Panel</strong> of the <strong>Start</strong> event and the <strong>Review tweet</strong> task to <code>embedded:app:forms/your-task-form.html</code> Make sure you change the file name to the names of your actual HTML files.</p></li>
+
+<li><p>Restart the application to apply the changes in the process model.</p></li>
+
+<li><p>After restarting, you can start a process instance in <a href="http://localhost:8080/app/tasklist/" target="_blank">Camunda Tasklist</a> by going to <strong>Start Process</strong> and selecting your process. After submitting the tweet to be approved you can go to the Tasklist and approve or reject the tweet.</p></li>
+
+<li><p>You can edit the HTML files directly in the IDE and reload the page in the browser to see the changes. When you use IntelliJ Ultimate Edition, edit the Run Configuration of the <code>CamundaApplication</code> and select <code>On frame deactivation: Update resources</code></p></li>
+</ol>
+
+<h4 id="hints">Hints</h4>
+
+<ul>
+<li>If you deploy multiple times because of testing, you will see the versioning capabilities of Camunda BPM. Please ask your instructor for any questions on the Tasklist web application.</li>
+<li>In Tasklist, you can see the status of a running process instance. Have a look and play around with it!</li>
+</ul>
+
+<h3 id="optional">Optional</h3>
+
+<p>Create another user in the group <code>management</code>. Create filters to see their tasks only.</p>
+
+<p>If you have access to the enterprise version, check the history of the process instances in Cockpit.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a>
+<ul>
+<li><a href="#hints">Hints</a></li>
+</ul></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0tfcp7s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
   <bpmn:process id="TwitterQAProcess" name="TwitterQA" isExecutable="true">
-    <bpmn:startEvent id="TweetEingegangenStartEvent" name="Tweet eingegangen">
+    <bpmn:startEvent id="TweetEingegangenStartEvent" name="Tweet eingegangen" camunda:formKey="embedded:app:forms/Start.html">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="content" label="Inhalt" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_181j6rg</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_181j6rg" sourceRef="TweetEingegangenStartEvent" targetRef="TweetBewertenTask" />
@@ -34,7 +39,17 @@
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="TweetBewertenTask" name="Tweet bewerten" camunda:candidateGroups="TweetBewerter">
+    <bpmn:userTask id="TweetBewertenTask" name="Tweet bewerten" camunda:formKey="embedded:app:forms/TweetBewerten.html" camunda:candidateGroups="TweetBewerter">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="content" label="Inhalt" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="okay" label="Text Okay?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
     </bpmn:userTask>

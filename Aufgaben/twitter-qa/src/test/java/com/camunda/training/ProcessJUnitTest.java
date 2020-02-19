@@ -6,6 +6,8 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertT
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.claim;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -111,9 +113,11 @@ public class ProcessJUnitTest {
 		claim(task, "Chef");
 
 		// Complete Task
-		Map<String, Object> approvedMap = new HashMap<String, Object>();
-		approvedMap.put("okay", false);
-		taskService().complete(task.getId(), approvedMap);
+		// Map<String, Object> approvedMap = new HashMap<String, Object>();
+		// approvedMap.put("okay", false);
+		// taskService().complete(task.getId(), approvedMap);
+		// Alternativ
+		complete(task, withVariables("okay", false));
 
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded();
