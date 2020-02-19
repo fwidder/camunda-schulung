@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Add Process Variables and Implement Gateway</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Add Process Variables and Implement Gateway</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>In this lab you will change your JavaDelegate to read the content from a process variable rather than a hard coded value. Then we&rsquo;ll update the test to send in the content of a tweet. Then we&rsquo;ll show you how to set up process test coverage to visualize your test cases in the context of a process diagram.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Add the content at the process instance start.</li>
+<li>Use the content in the Java Delegate to send it to Twitter and test your changes.</li>
+<li>Add the dependency to the process test coverage: <code>org.camunda.bpm.extension:camunda-bpm-process-test-coverage:0.3.2</code></li>
+<li>Change the rule and create a <code>TestCoverageProcessEngineRule</code></li>
+<li>Change the process engine configuration in the engine configuration file to <code>ProcessCoverageInMemProcessEngineConfiguration</code></li>
+<li>Run the test and inspect the test coverage.</li>
+<li>Think about strategies to test if you pass by the CreateTweetDelegate (and maybe skip the call to Twitter to make a real unit test).</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>In the previous lab, the code used a hardcoded value for the tweet in the java delegate. Now we&rsquo;ll update the java delegate code to retrieve the tweet content from a variable and then tweet it out. Go back to the <code>CreateTweetDelegate</code> code and update the following code</p>
+
+<p><code>String content = &quot;I did it! Cheers YOUR NAME HERE&quot;;</code></p>
+
+<p>If you look at the <code>execute</code> method where this line resides, you&rsquo;ll notice that it passes in the <code>DelegateExecution execution</code> object. The <code>execution</code> object represents the context of the process instance and will allow you to access things such as variables in the process. Change the hardcoded value to:</p>
+
+<p><code>String content = (String) execution.getVariable(&quot;content&quot;);</code></p>
+
+<p>This will retrieve the value of &ldquo;content&rdquo; which should have been set earlier in the process. The <code>getVariable()</code> method returns an object hence you&rsquo;ll need to cast it from and object to a string.</p></li>
+
+<li><p>Next, go back to the JUnit test case you created earlier and add the &ldquo;content&rdquo; variable to the HashMap in the <strong>testHappyPath</strong> method:</p>
+
+<p><code>variables.put(&quot;content&quot;, &quot;Exercise 4 test - YOUR NAME HERE&quot;);</code></p></li>
+
+<li><p>Run the JUnit test case. Remember how to do it? You should see the content from the test case on <a href="http://twitter.com/camunda_demo" target="_blank">Twitter</a>. What happens if you run the test again without changing the tweet content?</p></li>
+</ol>
+
+<h3 id="adding-process-engine-test-coverage">Adding Process Engine Test Coverage</h3>
+
+<p>An extension that can help you visualize your test cases and what branches of the process have been covered by your test cases can be included in your project. Follow these directions to add process test coverage to your project.</p>
+
+<ol>
+<li><p>Add the dependency to the process engine test coverage in your <strong>pom.xml</strong> preferably past line 86 <code>&lt;!-- Add your own dependencies here, if in compile scope, they are added to the jar --&gt;</code>:</p>
+
+<pre><code class="language-xml">    &lt;dependency&gt;
+      &lt;groupId&gt;org.camunda.bpm.extension&lt;/groupId&gt;
+      &lt;artifactId&gt;camunda-bpm-process-test-coverage&lt;/artifactId&gt;
+      &lt;version&gt;0.3.2&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+</code></pre></li>
+
+<li><p>In your JUnit test <strong>comment</strong> out your old <code>ProcessEngineRule</code> (about line 31) and add (note the addition of <code>static</code>) <code>public static ProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create().build();</code> like below:</p>
+
+<pre><code class="language-java">  //public ProcessEngineRule rule = new ProcessEngineRule();
+  public static ProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create().build();
+</code></pre>
+
+<p>Your IDE may prompt you to add the appropriate <code>TestCoverageProcessEngineRuleBuilder</code> import.</p></li>
+
+<li><p>For the new static rule you have to provide an additional <code>@ClassRule</code> annotation. Now the process test coverage will write a summary of all test methods when the test class is completed. Add this annotation to the <code>@Rule</code> annotation like so - <code>@Rule @ClassRule</code>.</p></li>
+
+<li><p>If you are using <strong>camunda.cfg.xml</strong> change the configuration class in the <strong>camunda.cfg.xml</strong>. The class for the <strong>processEngineConfiguration</strong> has to be  <code>org.camunda.bpm.extension.process_test_coverage.junit.rules.ProcessCoverageInMemProcessEngineConfiguration</code> from now on.</p></li>
+
+<li><p>Run the JUnit test. You may want to think about how to make the content of the tweet unique each time you run the test. Random numbers? System current time millis? Or even a more sophisticated approach? Up to you.</p></li>
+
+<li><p>Once the test is complete navigate to <code>target/process-test-coverage/com.camunda.training.MyFirstTest</code> (or whatever you called your test case). You should find an html file called something like <code>testHappyPath_TwitterQA.html</code>. Right click on the file and select <strong>Open with &gt; Web Browser</strong>. You should see something like this detailing the happy path test case. As you create other test cases you&rsquo;ll see other tasks in the process turn green.</p>
+
+<p><img src="./images/testCoverage.PNG" alt="" /></p></li>
+</ol>
+
+<h3 id="optional">Optional</h3>
+
+<p>Skip the call to Twitter to make a real unit test.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+<li><a href="#adding-process-engine-test-coverage">Adding Process Engine Test Coverage</a></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+
