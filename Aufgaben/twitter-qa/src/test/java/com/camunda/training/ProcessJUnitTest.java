@@ -81,6 +81,9 @@ public class ProcessJUnitTest {
 		approvedMap.put("okay", true);
 		taskService().complete(task.getId(), approvedMap);
 
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetPostenTask");
+
 		// Complete Waiting Job
 		List<Job> jobList = jobQuery().processInstanceId(processInstance.getId()).list();
 		assertThat(jobList).hasSize(1);
@@ -130,6 +133,9 @@ public class ProcessJUnitTest {
 		// taskService().complete(task.getId(), approvedMap);
 		// Alternativ
 		complete(task(), withVariables("okay", false));
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetAbweisenTask");	
 
 		// Complete Waiting Job
 		// List<Job> jobList =
