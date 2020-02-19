@@ -30,6 +30,11 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import twitter4j.TwitterException;
 
 public class ProcessJUnitTest {
 
@@ -37,18 +42,25 @@ public class ProcessJUnitTest {
 	@ClassRule
 	public static ProcessEngineRule rule = TestCoverageProcessEngineRuleBuilder.create().build();
 
+	@Mock
+	private TwitterService twitterService;
+
 	@Before
 	public void setup() {
 		init(rule.getProcessEngine());
-		Mocks.register("createTweetDelegate", new LoggerDelegtate("content"));
+
+		MockitoAnnotations.initMocks(this);
+		Mocks.register("createTweetDelegate", new CreateTweetDelegate(twitterService));
 	}
 
 	@Test
 	@Deployment(resources = "twitterQA.bpmn")
-	public void testHappyPath() {
+	public void testHappyPath() throws TwitterException {
+		// Init Mocks
+		Mockito.when(twitterService.postTweet(Mockito.anyString())).thenReturn("Mock ID");
+
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("okay", true);
 		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
 
 		// Start process with Java API and variables
@@ -91,7 +103,8 @@ public class ProcessJUnitTest {
 		execute(job);
 
 		// Make assertions on the process instance
-		assertThat(processInstance).isEnded();
+		assertThat(processInstance).isEnded().hasPassed("TweetGepostetEndEvent").variables().containsEntry("tweet-id", "Mock ID");
+		Mockito.verify(twitterService).postTweet(Mockito.anyString());
 	}
 
 	@Test
@@ -99,43 +112,16 @@ public class ProcessJUnitTest {
 	public void testSadPath() {
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("okay", true);
-		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
+		variables.put("okay", false);
+		variables.put("content", "test Sad Path - " + LocalDateTime.now().toString());
 
 		// Start process with Java API and variables
-		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
+		ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("TwitterQAProcess")//
+				.startAfterActivity("TweetBewertenTask")//
+				.setVariables(variables).execute();
 
 		// Make Sure Task is created and waiting
-		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
-
-		// Get Task List
-		List<Task> taskList = taskService().createTaskQuery()//
-				.taskCandidateGroup("TweetBewerter")//
-				.processInstanceId(processInstance.getId())//
-				.list();
-
-		// Check that Task List is not Empty
-		assertThat(taskList).isNotNull();
-		assertThat(taskList).hasSize(1);
-
-		// Get Task
-		Task task = taskList.get(0);
-
-		// Assert that Task is okay
-		assertThat(task).hasCandidateGroup("TweetBewerter").isNotAssigned();
-
-		// Claim Task
-		claim(task, "Chef");
-
-		// Complete Task
-		// Map<String, Object> approvedMap = new HashMap<String, Object>();
-		// approvedMap.put("okay", false);
-		// taskService().complete(task.getId(), approvedMap);
-		// Alternativ
-		complete(task(), withVariables("okay", false));
-
-		// Make Sure Task is created and waiting
-		assertThat(processInstance).isWaitingAt("TweetAbweisenTask");	
+		assertThat(processInstance).isWaitingAt("TweetAbweisenTask");
 
 		// Complete Waiting Job
 		// List<Job> jobList =
@@ -147,6 +133,6 @@ public class ProcessJUnitTest {
 		execute(job());
 
 		// Make assertions on the process instance
-		assertThat(processInstance).isEnded();
+		assertThat(processInstance).isEnded().hasPassed("TweetAbgewiesenEndEvent");
 	}
 }
