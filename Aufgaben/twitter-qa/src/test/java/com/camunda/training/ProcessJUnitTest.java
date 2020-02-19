@@ -7,13 +7,19 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.claim;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
@@ -75,6 +81,12 @@ public class ProcessJUnitTest {
 		approvedMap.put("okay", true);
 		taskService().complete(task.getId(), approvedMap);
 
+		// Complete Waiting Job
+		List<Job> jobList = jobQuery().processInstanceId(processInstance.getId()).list();
+		assertThat(jobList).hasSize(1);
+		Job job = jobList.get(0);
+		execute(job);
+
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded();
 	}
@@ -117,7 +129,16 @@ public class ProcessJUnitTest {
 		// approvedMap.put("okay", false);
 		// taskService().complete(task.getId(), approvedMap);
 		// Alternativ
-		complete(task, withVariables("okay", false));
+		complete(task(), withVariables("okay", false));
+
+		// Complete Waiting Job
+		// List<Job> jobList =
+		// jobQuery().processInstanceId(processInstance.getId()).list();
+		// assertThat(jobList).hasSize(1);
+		// Job job = jobList.get(0);
+		// execute(job);
+		// Alternativ
+		execute(job());
 
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded();

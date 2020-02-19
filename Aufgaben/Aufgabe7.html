@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Camunda Transaction Handling</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Camunda Transaction Handling</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>To understand how Camunda handles transactions and how you can control where in the process it rolls back to in the event a service is down, preventing the progress of a process.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Run the Tweet-approval process without internet connection.</li>
+<li>Get the error message when you complete the Approve-tweet task.</li>
+<li>Mark the Publish-on-twitter task as async.</li>
+<li>Adjust the JUnit test to handle the additional wait state.</li>
+<li>Redeploy and run a new process instance without internet connection.</li>
+<li>Find the incident in the cockpit.</li>
+<li>Reconnect to the internet and resolve the incident.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed Steps</h3>
+
+<ol>
+<li><p>Disconnect your computer from the internet. The easiest way to accomplish this is to turn off your wifi connection. This will simulate either Twitter being down or our network being down. The point being is that the <strong>Publish tweet</strong> service task will fail.</p></li>
+
+<li><p>Start a new <strong>Twitter QA</strong> process instance in <strong>Tasklist</strong> and <strong>approve</strong> the tweet.</p></li>
+
+<li><p>What happened? Did you get an error message in <strong>Tasklist</strong>? Have a look in the <strong>console</strong> of your IDE as well. This error obviously occurred as a result of not being able to publish the tweet. But do we want to show an error to end users or do we want to handle error in a more elegant fashion? Since the <strong>Review tweet</strong> task is a <strong>User Task</strong> it is a natural &lsquo;wait state&rsquo; or &lsquo;synchronization point&rsquo;, a point in the process where the state of a process instance needs to wait for something (in this case a person) to complete it, the Camunda BPM engine will save the state of the process instance to the database rather than holding it in memory. If something fails after the process is resumed, in this case a manager completing the <strong>Review tweet</strong> task, the engine will return to the last known save point which in this case is the <strong>Review tweet</strong> task. Since <strong>Review tweet</strong> is a <strong>User Task</strong> the error message created when <strong>Publish tweet</strong> failed will be sent back to the user in the form of a message in <strong>Tasklist</strong>. What&rsquo;s more, the manager will need to re-submit the form once the service is available. But the problem isn&rsquo;t with the end user but rather the service itself. What if there was a way to define &lsquo;wait states&rsquo; or &lsquo;synchronization points&rsquo; to allow you decide where a process rolls back to in the event of a failure? Read on for the answer.</p></li>
+
+<li><p>In <strong>Modeler</strong> in the <strong>General</strong> tab of the <strong>Properties Panel</strong> of the <strong>Publish tweet</strong> task enable <strong>Asynchronous Before</strong> by clicking on the checkbox in the <strong>Asynchronous Continuations</strong> section. What this does is it creates a save point before executing the service. In the event of a service failure the process will return to the point just before <strong>Publish tweet</strong> execution rather than to the previous save point, <strong>Review tweet</strong>. How do we then handle the error if we can&rsquo;t re-submit the <strong>Review tweet</strong> form? Read on to find out.</p>
+
+<p><img src="./images/asyncBefore.PNG" alt="" /></p></li>
+
+<li><p>Be sure to save the updated process. Then <strong>restart</strong> your application in your IDE to deploy this latest version of the process.</p></li>
+
+<li><p>Start a new instance of <strong>Twitter QA</strong> and <strong>approve</strong> the tweet. What happened? Did you see an error message in <strong>Tasklist</strong>? Check the console in your IDE. So, there was a message in the console but not in <strong>Tasklist</strong>. This is because the process has rolled back to the save point that was specified in <strong>Step 4</strong>.</p></li>
+
+<li><p>Open <strong>Cockpit</strong> either from <strong>Tasklist</strong> (Click on the Home icon in the far upper right corner and select <strong>Cockpit</strong>) or open a new browser window and go <a href="http://localhost:8080/app/cockpit/" target="_blank">here</a>.</p></li>
+
+<li><p>In the <strong>Dashboard</strong> that appears click on <strong>Processes</strong> near the upper left hand side. This will display the deployed process definitions. You should see the <strong>Twitter QA</strong> process along with a red X on the left to indicate there is an incident that occurred which needs to be attended to. Click on the red  X to display process instances where an incident has occurred. You should see at least one instance where an incident has occurred.</p></li>
+
+<li><p>Click on the <strong>Process Instance ID</strong> hyper link (it&rsquo;ll be on the left left side). You should be brought to a screen that displays information about this particular process instance (see screen capture below). You should see the process instance diagram with a red token at the task where the incident occurred. If you click on the <strong>Incidents</strong> tab under the diagram you should see the details of the incident. You can get stack trace details by clicking on the <strong>Message</strong> hyper link.
+<img src="./images/incident.PNG" alt="" /></p></li>
+
+<li><p>Enable your internet connection.</p></li>
+
+<li><p>To retry the task click on the <strong>circular arrow icon</strong> under <strong>Action</strong> in the <strong>Incidents</strong> tab. It should be on the right hand side (see screen shot above). This will allow you to increase the number of retries. You&rsquo;ll see a dialog box asking if you&rsquo;re sure you want to do this. Click on <strong>Retry</strong>. What happened? You may need to refresh the page. Do you see the red exclamation token on the task that was retried? Do you see the instance completing? Be sure to check <strong>Twitter</strong> as well. By putting an <strong>Asynchronous Before</strong> on <strong>Publish Tweet</strong> end users are shielded from receiving cryptic error messages. Fixing those is up to administrators or power users.</p></li>
+
+<li><p>You&rsquo;ll need to update your testing code to complete asynchronous save points in the process and move the process forward. Insert the following code snippet after <strong>Review tweet</strong> task completion and before the <strong>process ended assertion</strong> in your test code. This will query for jobs that are waiting to be executed and execute them.</p>
+
+<pre><code class="language-java">    List&lt;Job&gt; jobList = jobQuery()
+        .processInstanceId(processInstance.getId())
+        .list();
+    assertThat(jobList).hasSize(1);
+    Job job = jobList.get(0);
+    execute(job);
+</code></pre></li>
+
+<li><p>Execute the job in the JUnit test. Did it work?</p></li>
+</ol>
+
+<h3 id="optional">Optional</h3>
+
+<ul>
+<li>Install the transaction boundary plugin in your modeler and inspect the wait states.</li>
+<li>Migrate the failed process instance to latest version and complete it.</li>
+</ul>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed Steps</a></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

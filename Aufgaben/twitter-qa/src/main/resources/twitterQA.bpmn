@@ -30,12 +30,12 @@
       <bpmn:incoming>SequenceFlow_03j5nxy</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_03j5nxy" sourceRef="TweetPostenTask" targetRef="TweetGepostetEndEvent" />
-    <bpmn:scriptTask id="TweetAbweisenTask" name="Tweet abweisen" scriptFormat="javascript">
+    <bpmn:scriptTask id="TweetAbweisenTask" name="Tweet abweisen" camunda:asyncBefore="true" scriptFormat="javascript">
       <bpmn:incoming>NeinSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
       <bpmn:script>print('Tweet abgewiesen');</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:serviceTask id="TweetPostenTask" name="Tweet posten" camunda:delegateExpression="${createTweetDelegate}">
+    <bpmn:serviceTask id="TweetPostenTask" name="Tweet posten" camunda:asyncBefore="true" camunda:delegateExpression="${createTweetDelegate}">
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
     </bpmn:serviceTask>
