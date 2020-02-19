@@ -34,7 +34,22 @@ public class ProcessJUnitTest {
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put("okay", true);
-		variables.put("content", "Exercise 4 test - " + LocalDateTime.now().toString());
+		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
+
+		// Start process with Java API and variables
+		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
+		
+		// Make assertions on the process instance
+		assertThat(processInstance).isEnded();
+	}
+
+	@Test
+	@Deployment(resources = "twitterQA.bpmn")
+	public void testSadPath() {
+		// Create a HashMap to put in variables for the process instance
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("okay", false);
+		variables.put("content", "test Sad Path - " + LocalDateTime.now().toString());
 
 		// Start process with Java API and variables
 		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
