@@ -4,15 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.claim;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
-
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -103,7 +99,8 @@ public class ProcessJUnitTest {
 		execute(job);
 
 		// Make assertions on the process instance
-		assertThat(processInstance).isEnded().hasPassed("TweetGepostetEndEvent").variables().containsEntry("tweet-id", "Mock ID");
+		assertThat(processInstance).isEnded().hasPassed("TweetGepostetEndEvent").variables().containsEntry("tweet-id",
+				"Mock ID");
 		Mockito.verify(twitterService).postTweet(Mockito.anyString());
 	}
 
@@ -124,12 +121,7 @@ public class ProcessJUnitTest {
 		assertThat(processInstance).isWaitingAt("TweetAbweisenTask");
 
 		// Complete Waiting Job
-		// List<Job> jobList =
-		// jobQuery().processInstanceId(processInstance.getId()).list();
-		// assertThat(jobList).hasSize(1);
-		// Job job = jobList.get(0);
-		// execute(job);
-		// Alternativ
+
 		execute(job());
 
 		// Make assertions on the process instance

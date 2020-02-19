@@ -17,6 +17,6 @@ public class TwitterService {
 		twitter.setOAuthConsumer("lRhS80iIXXQtm6LM03awjvrvk", "gabtxwW8lnSL9yQUNdzAfgBOgIMSRqh7MegQs79GlKVWF36qLS");
 		twitter.setOAuthAccessToken(accessToken);
 		Status status = twitter.updateStatus(content);
-		return status.getId()+"";
+		return status.getId() + "";
 	}
 }
