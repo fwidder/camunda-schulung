@@ -30,14 +30,14 @@
       <bpmn:outgoing>SequenceFlow_0o94twe</bpmn:outgoing>
       <bpmn:script>print('Tweet abgewiesen');</bpmn:script>
     </bpmn:scriptTask>
-    <bpmn:manualTask id="TweetBewertenTask" name="Tweet bewerten">
-      <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
-    </bpmn:manualTask>
-    <bpmn:serviceTask id="TweetPostenTask" name="Tweet posten" camunda:class="com.camunda.training.CreateTweetDelegate">
+    <bpmn:serviceTask id="TweetPostenTask" name="Tweet posten" camunda:delegateExpression="${createTweetDelegate}">
       <bpmn:incoming>JaSequenceFlow</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03j5nxy</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:userTask id="TweetBewertenTask" name="Tweet bewerten" camunda:candidateGroups="TweetBewerter">
+      <bpmn:incoming>SequenceFlow_181j6rg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tggmwx</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TwitterQAProcess">
@@ -99,11 +99,11 @@
       <bpmndi:BPMNShape id="ScriptTask_0zs75ys_di" bpmnElement="TweetAbweisenTask">
         <dc:Bounds x="520" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ManualTask_069q34z_di" bpmnElement="TweetBewertenTask">
-        <dc:Bounds x="260" y="100" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_1p1uy0z_di" bpmnElement="TweetPostenTask">
         <dc:Bounds x="520" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0tcbi58_di" bpmnElement="TweetBewertenTask">
+        <dc:Bounds x="260" y="100" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Enabling and Testing User Tasks</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Enabling and Testing User Tasks</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>In this lab you will update your process to utilize a User Task to review the tweet. And then you&rsquo;ll utilize the Camunda BPM Assert APIs and Task APIs in your JUnit test to test the process under more realistic conditions.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Change the manual tasks to user tasks.</li>
+<li>Add the tasks to the <code>management</code> group.</li>
+<li>Extend the JUnit test to query for the user task and complete it.</li>
+<li>Assert the expected state of the process instance and the tasks.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>Go back into <strong>Modeler</strong> and using the <strong>wrench icon</strong> in the <strong>Context Pad</strong> change the <strong>Review tweet</strong> task from <strong>Manual</strong> to <strong>User Task</strong>. And now when the process is run you&rsquo;ll need to add code to the JUnit test to complete the task.</p></li>
+
+<li><p>Next, you have a choice to make. You can change the <strong>Id</strong> of the <strong>Review tweet</strong> task to something more readable or use the generated <strong>Id</strong>. A better solution is to use the <strong>bpmn-js-plugin-rename-technical-ids</strong> Modeler plugin available <a href="https://github.com/camunda-consulting/code/tree/master/snippets/camunda-modeler-plugins/bpmn-js-plugin-rename-technical-ids" target="_blank">here</a>. Download the code repository available <a href="https://github.com/camunda-consulting/code" target="_blank">here</a>. Download the zip or clone the code. Open the zip or the cloned code and copy the <strong>bpmn-js-plugin-rename-technical-ids</strong> folder located in <strong>code-master\snippets\camunda-modeler-plugins</strong> to the <strong>plugins</strong> folder of your Modeler installation. Restart Modeler to enable the plugin and you can rename the nodes in your model to something more human readable by clicking on <strong>ID Renaming</strong> link in the bottom left hand corner. If you then click on <strong>Rename IDs</strong> the plugin will rename the nodes with the ones generated. In any case it will be important later when making assertions and completing tasks using this <strong>Id</strong>. For this exercise we&rsquo;ll change the <strong>Id</strong> to <strong>ReviewTweetTask</strong> as spaces aren&rsquo;t allowed in <strong>Id</strong>s.</p></li>
+
+<li><p>Set the <strong>Candidate groups</strong> of the <strong>Review tweet</strong> task to <code>management</code>. This will be important later during testing when using APIs to retrieve tasks by <strong>Candidate groups</strong>.</p></li>
+
+<li><p>Go back to the JUnit test you developed in the last lab. If you review the code you&rsquo;ll realize this test will fail since the only assertion made in it is the one where is the process has ended. With the updated process we know that once the process is started it will be waiting at the <strong>Review tweet</strong> task. How would we use <code>assertThat</code> to make sure the process is waiting at <strong>Review tweet</strong>? For more hints regarding this assertion <a href="https://docs.camunda.org/manual/latest/user-guide/testing/#camunda-assertions" target="_blank">have a look here</a> in the Camunda documentation. Put this assertion after the start of the process instance and be sure to use the <strong>Id</strong> chosen in <strong>Step 2</strong>.</p></li>
+
+<li><p>Next, we need to query for available tasks for <code>management</code> <strong>Candidate groups</strong>. This is accomplished using the <strong>taskService</strong> object. Add the following code after the assertion you added in <strong>Step 4</strong>. Be sure to add <code>java.util.List</code> to your imports. You&rsquo;ll notice we&rsquo;re using a method to retrieve only tasks for the <code>management</code> <strong>Candidate group</strong> for our particular process instance. We should only retrieve one item.</p>
+
+<pre><code class="language-java">  List&lt;Task&gt; taskList = taskService()
+      .createTaskQuery()
+	      .taskCandidateGroup(&quot;management&quot;)
+	      .processInstanceId(processInstance.getId())
+	      .list();
+</code></pre>
+
+<p>For more information regarding what options are available with <code>createTaskQuery()</code> <a href="https://docs.camunda.org/javadoc/camunda-bpm-platform/7.10/index.html?org/camunda/bpm/engine/task/TaskQuery.html" target="_blank">have a look here</a></p></li>
+
+<li><p>Once we have the &lsquo;list&rsquo; of tasks we should make sure the list is not null and that it only has one item. Use <code>org.assertj.core.api.Assertions</code> library (avaliable via static import) to make the following assertions:</p>
+
+<pre><code class="language-java">   assertThat(taskList).isNotNull();
+   assertThat(taskList).hasSize(1);
+</code></pre></li>
+
+<li><p>Now we need to complete the task and to make it more realistic we&rsquo;ll complete the task with the &lsquo;approved&rsquo; boolean instead of setting it at the beginning of the process. First, <strong>remove</strong> the line that adds the &lsquo;approved&rsquo; boolean to the <strong>Map</strong> ie. <code>variables.put(&quot;approved&quot;, true);</code>
+that starts off the process.</p></li>
+
+<li><p>Next, get the one and only task at position zero.</p>
+
+<pre><code class="language-java">   Task task = taskList.get(0);
+</code></pre></li>
+
+<li><p>Complete this task using <strong>taskService()</strong> and passing in the <strong>approved</strong> variable. To complete the task, we need the ID of the task which can be obtained from the <strong>task</strong> object.</p>
+
+<pre><code class="language-java">   Map&lt;String, Object&gt; approvedMap = new HashMap&lt;String, Object&gt;();
+   approvedMap.put(&quot;approved&quot;, true);
+   taskService().complete(task.getId(), approvedMap);
+</code></pre>
+
+<p>For more information on <code>taskService</code> see <a href="https://docs.camunda.org/javadoc/camunda-bpm-platform/7.10/index.html?org/camunda/bpm/engine/TaskService.html" target="_blank">Task Service Interface Java Docs</a></p></li>
+
+<li><p>Make sure the process ended assertion completes the JUnit test.</p></li>
+
+<li><p>Run the <strong>testHappyPath</strong> test case and check for the green bar. Be sure you&rsquo;re not attempting to tweet a duplicate tweet that will result in an error.</p></li>
+</ol>
+
+<h3 id="optional">Optional</h3>
+
+<p>Try the helpers from the <a href="https://github.com/camunda/camunda-bpm-assert/blob/master/docs/User_Guide_BPMN.md" target="_blank">camunda-bpm-assert</a> library to write a shorter test and test more facts from the process instance and the task.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+
