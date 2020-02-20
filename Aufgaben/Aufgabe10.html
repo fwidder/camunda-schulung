@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Camunda BPM REST API</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Camunda BPM REST API</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>In this lab you will get to know the REST API provided by Camunda BPM by using a REST client. The list of all API calls is in the <a href="https://docs.camunda.org/manual/latest/reference/rest/" target="_blank">docs</a>.</p>
+
+<p>Users who are experienced with a REST client can skip this exercise and do exercise 11 with the REST API.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Open a rest client and get all process definitions.</li>
+<li>Start a process instance of the Twitter-QA process.</li>
+<li>Query for tasks.</li>
+<li>Claim and complete the tasks.</li>
+<li>Check the result on <a href="http://twitter.com/camunda_demo" target="_blank">Twitter</a>.</li>
+<li>Check the completed process instance.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>Download, install, and open a REST client like Postman: <a href="https://www.getpostman.com/" target="_blank">www.getpostman.com/</a> for Chrome or RESTClient for Firefox: <a href="https://addons.mozilla.org/de/firefox/addon/restclient/" target="_blank">German</a>, <a href="https://addons.mozilla.org/firefox/addon/restclient/" target="_blank">English</a></p></li>
+
+<li><p>The entry point for the REST API is: <a href="http://localhost:8080/rest/" target="_blank">localhost:8080/rest/</a> which you&rsquo;ll use as your base URL.</p></li>
+
+<li><p>Query for all process definitions with a GET request to ensure that the Twitter QA Process is available. <a href="https://docs.camunda.org/manual/latest/reference/rest/process-definition/get-query/" target="_blank">Camunda Docs Reference to GET Process Definitions</a>. For GETs you can also simply put the REST API URL in a browser <code>http://localhost:8080/rest/process-definition</code> though the response won&rsquo;t be as nicely formatted. You should see a JSON response with all of the process definitions along with each version that has been deployed:</p>
+
+<pre><code class="language-json">   [
+       {
+           &quot;id&quot;: &quot;TwitterQA:1:495e4a7a-5007-11e9-9b72-00155db2b504&quot;,
+           &quot;key&quot;: &quot;TwitterQA&quot;,
+           &quot;category&quot;: &quot;http://bpmn.io/schema/bpmn&quot;,
+           &quot;description&quot;: null,
+           &quot;name&quot;: &quot;TwitterQA&quot;,
+           &quot;version&quot;: 1,
+           &quot;resource&quot;: &quot;Your name - Exercise 1.bpmn&quot;,
+           &quot;deploymentId&quot;: &quot;4942d338-5007-11e9-9b72-00155db2b504&quot;,
+           &quot;diagram&quot;: null,
+           &quot;suspended&quot;: false,
+           &quot;tenantId&quot;: null,
+           &quot;versionTag&quot;: null,
+           &quot;historyTimeToLive&quot;: null,
+           &quot;startableInTasklist&quot;: true
+       }
+    ]
+</code></pre></li>
+
+<li><p>Using POST, start a process instance of the latest version and pass in the <code>content</code> variable. <a href="https://docs.camunda.org/manual/latest/reference/rest/process-definition/post-start-process-instance/" target="_blank">Camunda Docs Reference to POST Start Process</a>. Your POST should look something like this (Postman screen shot). Be sure to use a <code>Content-Type</code> of <code>application/json</code> in the <code>Header</code>.
+<img src="./images/jsonREST.PNG" alt="" /></p></li>
+
+<li><p>Take a look either in <strong>Tasklist</strong> or <strong>Cockpit</strong> to ensure a process has been started via REST.</p></li>
+
+<li><p>Use a GET request to query for the user task of the process instance. <a href="https://docs.camunda.org/manual/latest/reference/rest/task/get-query/" target="_blank">Camunda Docs Reference to GET Tasks</a>. Did you find the task?</p></li>
+
+<li><p>Be sure to copy the <strong>id</strong> of the task you want to claim from the response of the previous task query REST API call. Use the <strong>id</strong> in the POST request to claim the task for the user <code>demo</code>. <a href="https://docs.camunda.org/manual/latest/reference/rest/task/post-claim/" target="_blank">Camunda Docs Reference to POST Claim a task</a>. The user id is passed in as a JSON object in the <code>Body</code> of a request. Remember how to do that? If the call was successful you&rsquo;ll get a <code>204</code> response code.</p></li>
+
+<li><p>Use a POST request to complete the task using the <strong>id</strong> from earlier. Be sure pass in the <code>approved</code> boolean variable as a JSON object in the <code>Body</code> of the request. <a href="https://docs.camunda.org/manual/latest/reference/rest/task/post-complete/" target="_blank">Camunda Docs Reference to POST Complete a task</a>. Be sure to check the documentation for the proper JSON object format.</p></li>
+
+<li><p>Check the result on <a href="http://twitter.com/camunda_demo" target="_blank">Twitter</a>. Did the tweet get published?</p></li>
+
+<li><p>Use a GET request to see the completed process instance history. <a href="https://docs.camunda.org/manual/latest/reference/rest/history/process-instance/get-process-instance-query/" target="_blank">Camunda Docs Reference to GET Process instance history</a>. Now you&rsquo;re familiar with Camunda REST APIs.</p></li>
+</ol>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

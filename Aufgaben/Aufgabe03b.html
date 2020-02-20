@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Add a Java Delegate to Publish on Twitter</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Add a Java Delegate to Publish on Twitter</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>The Goal of this lab is to use a JavaDelegate in the service task to publish on twitter.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Add the dependency for the Twitter4j library to your pom file.</li>
+<li>Create a Class implementing the JavaDelegate interface.</li>
+<li>Add the code to create a constant content and publish this on twitter.</li>
+<li>Configure this class in the service task.</li>
+<li>Test your implementation with the JUnit test.</li>
+<li>Check your tweet online on Twitter <a href="http://twitter.com/camunda_demo" target="_blank">twitter.com/camunda_demo</a></li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>Add dependencies for the Twitter4j API to your project. Edit the <strong>pom.xml</strong> to add the following dependency somewhere after line 86 which states <code>&lt;!-- Add your own dependencies here, if in compile scope, they are added to the jar --&gt;</code></p>
+
+<pre><code class="language-xml">    &lt;dependency&gt;
+      &lt;groupId&gt;org.twitter4j&lt;/groupId&gt;
+      &lt;artifactId&gt;twitter4j-core&lt;/artifactId&gt;
+      &lt;version&gt;3.0.5&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre></li>
+
+<li><p>Create a new Java class in your project under <code>src/main/java</code> using the <code>com.camunda.training</code> package and name it <code>CreateTweetDelegate</code>. It must implement the <code>JavaDelegate</code> interface which the sample code in the next step utilizes.</p></li>
+
+<li><p>The example code below shows how to create an authenticated Twitter instance and use it to tweet. You can copy and paste the code but make sure you change the <code>content</code> variable!</p>
+
+<pre><code class="language-java">import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class CreateTweetDelegate implements JavaDelegate {
+  private final Logger LOGGER = LoggerFactory.getLogger(CreateTweetDelegate.class.getName());
+
+  public void execute(DelegateExecution execution) throws Exception {
+    String content = &quot;I did it! Cheers YOUR NAME HERE&quot;;
+    LOGGER.info(&quot;Publishing tweet: &quot; + content);
+    AccessToken accessToken = new AccessToken(&quot;220324559-jet1dkzhSOeDWdaclI48z5txJRFLCnLOK45qStvo&quot;, &quot;B28Ze8VDucBdiE38aVQqTxOyPc7eHunxBVv7XgGim4say&quot;);
+    Twitter twitter = new TwitterFactory().getInstance();
+    twitter.setOAuthConsumer(&quot;lRhS80iIXXQtm6LM03awjvrvk&quot;, &quot;gabtxwW8lnSL9yQUNdzAfgBOgIMSRqh7MegQs79GlKVWF36qLS&quot;);
+    twitter.setOAuthAccessToken(accessToken);
+    twitter.updateStatus(content);
+  }
+}
+</code></pre></li>
+
+<li><p>If you are behind a proxy, create a file called &ldquo;twitter4j.properties&rdquo; with the following content in the main/resources directory of your project or use the file provided by your instructor:</p>
+
+<pre><code class="language-properies">http.proxyHost=your.proxy.host
+http.proxyPort=8080
+http.proxyUser=foo
+http.proxyPassword=bar
+</code></pre></li>
+
+<li><p>Change the Script Task on the affirmative sequence <code>Publish tweet</code> into a Service Task.</p></li>
+
+<li><p>In the <strong>Properties Panel</strong> of the <code>Publish tweet</code> task select <strong>Java Class</strong> for the <strong>Implementation</strong> and then enter the <strong>fully qualified name</strong> of <code>CreateTweetDelegate</code> as its implementation.</p></li>
+
+<li><p>Run your <strong>testHappyPath</strong> JUnit test, you should once again see a green bar in the JUnit window.</p></li>
+
+<li><p>Check your tweet online on Twitter <a href="http://twitter.com/camunda_demo" target="_blank">twitter.com/camunda_demo</a>.</p></li>
+
+<li><p>Run your <strong>testHappyPath</strong> JUnit test again. What happened? Inspect the stack trace and look for the reason.</p></li>
+</ol>
+
+<p><a href="illustrations-exercise3b.html" target="_blank">Illustrated description</a></p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

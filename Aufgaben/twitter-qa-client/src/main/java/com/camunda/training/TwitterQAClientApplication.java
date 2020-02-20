@@ -26,34 +26,33 @@ public class TwitterQAClientApplication {
 
 		// handle job
 		subscriptionBuilder.handler((externalTask, externalTaskService) -> {
+			// Get Content
 			String content = externalTask.getVariable("content");
+
+			// Choose Okay Fail or Unlock
 			String[] options = new String[] { "Okay", "Fail", "Unlock" };
 			int response = JOptionPane.showOptionDialog(null, content, "Choose for Content", JOptionPane.DEFAULT_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+			// Evaluate
 			switch (response) {
-			case 0:
+			case 0: // Okay
 				System.out.println("Okay: " + content);
 				Map<String, Object> variables = new HashMap<String, Object>();
 				variables.put("notficationTimestamp", new Date());
 				externalTaskService.complete(externalTask, variables);
 				break;
 
-			case 1:
+			case 1: // Fail
 				System.out.println("Fail: " + content);
 				externalTaskService.handleFailure(externalTask, "Random Fail", "Random Fail", 0, 0);
 				break;
 
-			case 2:
+			case 2: // Unlock
 				System.out.println("Unlocked: " + content);
 				externalTaskService.unlock(externalTask);
 				break;
 			}
-
-//			try {
-//				Thread.sleep(15000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
 
 		});
 
