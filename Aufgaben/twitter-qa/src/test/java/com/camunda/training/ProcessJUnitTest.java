@@ -8,15 +8,18 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complet
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.impl.pvm.PvmException;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
@@ -185,5 +188,69 @@ public class ProcessJUnitTest {
 
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded().hasPassed("TweetStorniertEndEvent");
+	}
+
+	@Test
+	@Deployment(resources = "twitterQA.bpmn")
+	public void testTweetDupplicateError() throws TwitterException {
+		// Init Mocks
+		Mockito.when(twitterService.postTweet(Mockito.anyString()))
+				.thenThrow(new TwitterException("Dupplicate", null, 187));
+
+		// Create a HashMap to put in variables for the process instance
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("okay", true);
+		variables.put("content", "test Sad Path");
+
+		// Start process with Java API and variables
+		ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("TwitterQAProcess")//
+				.startAfterActivity("TweetBewertenTask")//
+				.setVariables(variables).execute();
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetPostenTask");
+
+		// Complete Waiting Job
+		assertThrows(PvmException.class, () -> execute(job()));
+
+		// Create a HashMap to put in variables for the process instance
+		variables = new HashMap<String, Object>();
+		variables.put("okay", true);
+		variables.put("content", "test Sad Path");
+
+		// Start process with Java API and variables
+		processInstance = runtimeService().createProcessInstanceByKey("TwitterQAProcess")//
+				.startBeforeActivity("DoppelteNachrichtBoundaryEvent")//
+				.setVariables(variables).execute();
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetAnpassenTask");
+	}
+
+	@Test
+	@Deployment(resources = "twitterQA.bpmn")
+	public void testTweetDupplicateAnpassen() throws TwitterException {
+		// Init Mocks
+		Mockito.when(twitterService.postTweet(Mockito.anyString()))
+				.thenThrow(new TwitterException("Dupplicate", null, 187));
+
+		// Create a HashMap to put in variables for the process instance
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("okay", true);
+		variables.put("content", "test Sad Path");
+
+		// Start process
+		ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("TwitterQAProcess")//
+				.startBeforeActivity("DoppelteNachrichtBoundaryEvent")//
+				.setVariables(variables).execute();
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetAnpassenTask");
+
+		// Complete Waiting Job
+		complete(task());
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
 	}
 }
