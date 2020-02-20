@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>BPMN Event Handling</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">BPMN Event Handling</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>Model a process with message events and run it. <a href="#short-description-for-java-developers">Java Developers</a> should write tests to run it. <a href="#short-description-for-advanced-rest-users">Advanced REST users</a> should run the process in their REST client.</p>
+
+<h3 id="short-description-for-java-developers">Short description for Java developers</h3>
+
+<ul>
+<li>Update the  Tweet QA process to include a message start event by a superuser and a Tweet withdrawn message boundary event in the Camunda Modeler.</li>
+<li>Write a new test class to get a <code>MismatchingMessageCorrelationException</code> with a single process instance.</li>
+<li>Improve the test case to avoid the exception.</li>
+<li>Add another test to start the process and send a boundary event</li>
+</ul>
+
+<h3 id="detailed-steps-for-java-developers">Detailed steps for Java developers</h3>
+
+<ol>
+<li>Update the TwitterQA process as shown below. Add a <strong>message start event</strong> for a Tweet submitted by a superuser which does not need an approval. Add an <strong>message boundary event</strong> to <strong>Review tweet</strong> and connect it to an <strong>end event</strong>. This will allow a user (or anybody else) to withdraw or cancel a tweet submission.
+<img src="./images/exercise11Process.PNG" alt="" /></li>
+<li>For the <strong>Tweet submitted by superuser</strong> start event add the <strong>Message Name</strong> <code>superuserTweet</code>. Message names can be added in the <strong>Details</strong> section of the <strong>General</strong> tab of the <strong>Properties Panel</strong> after you click on the plus (+) sign in <strong>Message</strong>. You can edit the <strong>Message Name</strong> which then will be added the drop down selection of messages.
+<img src="./images/superuserTweet.PNG" alt="" /></li>
+<li>Repeat for <strong>Tweet withdrawn</strong> boundary event using a message name of <code>tweetWithdrawn</code>. <strong>Save</strong> your updates.</li>
+<li>Create a new test method. Be sure your <code>@Deployment</code> annotation uses <code>Your name - Exercise 1.bpmn</code> to point to the correct process model. Add the <code>@Test</code> annotation, too.</li>
+
+<li><p>In your new method start a process by creating a message and correlating it with an event. Be sure to add a <code>content</code> variable. Given that <code>superuserTweet</code> is correlated with a start event, it will simply start the process.</p>
+
+<pre><code class="language-java">    ProcessInstance processInstance = runtimeService()
+        .createMessageCorrelation(&quot;superuserTweet&quot;)
+        .setVariable(&quot;content&quot;, &quot;My Exercise 11 Tweet - &quot; + System.currentTimeMillis())
+        .correlateWithResult()
+        .getProcessInstance();
+</code></pre></li>
+
+<li><p>Next, let&rsquo;s use our handy process started assertion:</p>
+
+<pre><code class="language-java">    assertThat(processInstance).isStarted();
+</code></pre></li>
+
+<li><p>If you recall, we enabled an <code>Asynchronous Before</code> on the <strong>Publish tweet</strong> task so the process should have a job waiting there to be executed in the test. For this example we won&rsquo;t be executing the job. We&rsquo;ll be sending the <strong>Tweet withdrawn</strong> event to illustrate what happens if you send an event that the process is not expecting. Send the <code>tweetWithdrawn</code> event when the process should be waiting for the <code>Asynchronous Before</code> job at <strong>Publish tweet</strong> to be completed. You&rsquo;ll notice that we need to have some sort of correlation to ensure the message is sent to the correct instance. In this case we&rsquo;ll use the process instance ID for correlation.</p>
+
+<pre><code class="language-java">    runtimeService()
+        .createMessageCorrelation(&quot;tweetWithdrawn&quot;)
+        .processInstanceId(processInstance.getId())
+        .correlateWithResult();
+</code></pre></li>
+
+<li><p>Run the JUnit test as is. What happened? Did you get a <code>MismatchingMessageCorrelationException</code>? If you did it was because the process instance was found using the process instance id for correlation but since the process was waiting at <strong>Tweet published</strong> it could not accept the <strong>tweetWithdrawn</strong> event.</p></li>
+
+<li><p>Update your test method to query for and complete the job at <strong>Publish tweet</strong> and assert that the process ends.</p>
+
+<pre><code class="language-java">    // get the job
+    List&lt;Job&gt; jobList = jobQuery()
+       .processInstanceId(processInstance.getId())
+       .list();
+
+    // execute the job
+    assertThat(jobList).hasSize(1);
+    Job job = jobList.get(0);
+    execute(job);
+
+    assertThat(processInstance).isEnded();
+</code></pre></li>
+
+<li><p>Run your JUnit test again. Did it pass? Check your process test coverage output and check the <a href="https://twitter.com/camunda_demo" target="_blank">Camunda Demo Twitter feed</a>.</p></li>
+
+<li><p>Add another method to test the <strong>Tweet withdrawn</strong> message called <strong>testTweetWithdrawn</strong>. Be sure to start the process with a <strong>content</strong> variable, assert that it is started and is wating at <strong>Review tweet</strong>. Next, send a <strong>tweetWithdrawn</strong> message with the proper correlation using the tweet content.</p>
+
+<pre><code class="language-java">  @Test
+  @Deployment(resources=&quot;Your name - Exercise 1.bpmn&quot;)
+  public void testTweetWithdrawn() {
+	Map&lt;String, Object&gt; varMap = new HashMap&lt;&gt;();
+    varMap.put(&quot;content&quot;, &quot;Test tweetWithdrawn message&quot;);
+    ProcessInstance processInstance = runtimeService()
+        .startProcessInstanceByKey(&quot;TwitterQAProcess&quot;, varMap);
+    assertThat(processInstance).isStarted().isWaitingAt(&quot;ReviewTweetTask&quot;);
+    runtimeService()
+       .createMessageCorrelation(&quot;tweetWithdrawn&quot;)
+       .processInstanceVariableEquals(&quot;content&quot;, &quot;Test tweetWithdrawn message&quot;)
+       .correlateWithResult();
+    assertThat(processInstance).isEnded();
+  }
+</code></pre></li>
+
+<li><p>Run your JUnit test again. Did the tests pass? Do you see new tweets? Check your process test coverage. The <strong>TwitterQA.html</strong> summary should look something like this:
+<img src="./images/exercise11TestCoverage.PNG" alt="" /></p></li>
+</ol>
+
+<h3 id="short-description-for-advanced-rest-users">Short description for advanced REST users</h3>
+
+<ul>
+<li>Update the  Tweet QA process to include a message start event by a superuser and a Tweet withdrawn message boundary event in the Camunda Modeler.</li>
+<li>Start Spring Boot application.</li>
+<li>Use your REST client to communicate with the process engine and start a process via Superuser Tweet message.</li>
+<li>Try to get a <code>MismatchingMessageCorrelationException</code> with a single process instance.</li>
+<li>Use your REST client to communicate with the process engine and start a process manually to ensure it reaches the Review tweet task.</li>
+<li>Send a tweet withdrawn event to complete the process.</li>
+</ul>
+
+<h3 id="detailed-steps-for-advanced-rest-users">Detailed steps for advanced REST users</h3>
+
+<ol>
+<li>Update the Tweet QA process as shown below. <strong>If you&rsquo;ve already updated this process by completing the Java section, skip to Step 4</strong>. Add a <strong>message start event</strong> for a Tweet submitted by a superuser which does not need an approval. Add an <strong>message boundary event</strong> to <strong>Review tweet</strong> and connect it to an <strong>end event</strong>. This will allow a user (or anybody else) to withdraw or cancel a tweet submission.
+<img src="./images/exercise11Process.PNG" alt="" /></li>
+<li>For the <strong>Tweet submitted by superuser</strong> start event add the <strong>Message Name</strong> <code>superuserTweet</code>. Message names can be added in the <strong>Details</strong> section of the <strong>General</strong> tab of the <strong>Properties Panel</strong> after you click on the plus (+) sign in <strong>Message</strong>. You can edit the <strong>Message Name</strong> which then will be added the drop down selection of messages.
+<img src="./images/superuserTweet.PNG" alt="" /><br /></li>
+<li>Repeat for <strong>Tweet withdrawn</strong> boundary event using a message name of <code>tweetWithdrawn</code>. <strong>Save</strong> your updates.</li>
+<li>Start your Camunda Spring Boot application as you have done before. See <strong>Step 7</strong> of <strong>Exercise 2a</strong> in case you need a refresher.</li>
+<li>Open your favorite REST client (see <strong>Exercise 10</strong> if you don&rsquo;t have one already) and use the following base url for your next REST API calls: <code>http://localhost:8080/rest</code></li>
+
+<li><p>Send a <code>superuserTweet</code> message via a POST REST API to start an instance of <strong>TwitterQA</strong>. <a href="https://docs.camunda.org/manual/latest/reference/rest/message/post-message/" target="_blank">Camunda Docs Reference to POST a message</a>. Be sure to include <strong>messageName</strong> of the message name you&rsquo;d like to send along with <strong>resultEnabled</strong> set to <strong>true</strong> in the <strong>Body</strong> to be sure you get back the process instance id of the process you just started for correlation later. You could also use <strong>businessKey</strong> as a way to correlate messages. Your POST should look something like this (Postman screen shot). Be sure to use a <code>Content-Type</code> of <code>application/json</code> in the <code>Header</code>.</p>
+
+<p><img src="./images/exercise11REST1.PNG" alt="" /></p>
+
+<pre><code class="language-json">{
+  &quot;messageName&quot;: &quot;superuserTweet&quot;,
+  &quot;resultEnabled&quot;: &quot;true&quot;,
+  &quot;processVariables&quot; : {
+    &quot;content&quot; : {&quot;value&quot; : &quot;my message from rest&quot;, &quot;type&quot;: &quot;String&quot;}
+  }
+}
+</code></pre></li>
+
+<li><p>The response should look something like this. Be sure to copy the <strong>id</strong> for later REST API calls.</p>
+
+<pre><code class="language-json"> [
+    {
+        &quot;resultType&quot;: &quot;ProcessDefinition&quot;,
+        &quot;execution&quot;: null,
+        &quot;processInstance&quot;: {
+            &quot;links&quot;: [],
+            &quot;id&quot;: &quot;bbe1ddf1-6533-11e9-8b80-00155db2b504&quot;,
+            &quot;definitionId&quot;: &quot;Process_0bh5p3y:1:aa9c0004-652b-11e9-a73c-00155db2b504&quot;,
+            &quot;businessKey&quot;: null,
+            &quot;caseInstanceId&quot;: null,
+            &quot;ended&quot;: false,
+            &quot;suspended&quot;: false,
+            &quot;tenantId&quot;: null
+        }
+    }
+  ]
+</code></pre></li>
+
+<li><p>Take a look either in <strong>Cockpit</strong> to ensure a process has been started via REST.</p></li>
+
+<li><p>Start a new process instance in the Tasklist.</p></li>
+
+<li><p>Send a task query with the REST client as a GET request. Have a look at the <a href="https://docs.camunda.org/manual/latest/reference/rest/task/get-query/" target="_blank">docs</a> for the query parameters. Did you find the task? Copy the <strong>id</strong> from the response.</p></li>
+
+<li><p>Stop your external task worker from <strong>Exercise 9</strong> if it is still running.</p></li>
+
+<li><p><a href="https://docs.camunda.org/manual/latest/reference/rest/task/post-complete/" target="_blank">Complete the task</a> with a POST request from the REST client and reject the tweet. Don&rsquo;t forget to set the Content-Type in the Header to <code>application/json</code>. Paste the <strong>id</strong> of the task in the request URL. The payload may look like this</p>
+
+<pre><code class="language-json">{&quot;variables&quot;: {&quot;approved&quot;: {&quot;value&quot;: false}}}
+</code></pre>
+
+<p>What status code did you get for the request? Check it with the docs for the expected result.</p></li>
+
+<li><p>Now try sending a <code>tweetWithdrawn</code> with the REST client. Your POST should look something like this (Postman screen shot). You should get a <code>MismatchingMessageCorrelationException</code> when you attempt to send the message. This means it found a correlation but no waiting <strong>tweetWithdrawn</strong> event.
+<img src="./images/cancelREST1.PNG" alt="" />
+Response body:</p>
+
+<pre><code class="language-json"> {
+    &quot;type&quot;: &quot;RestException&quot;,
+    &quot;message&quot;: &quot;org.camunda.bpm.engine.MismatchingMessageCorrelationException: Cannot correlate message 'withdrawTweet': No process definition or execution matches the parameters&quot;
+ }
+</code></pre></li>
+
+<li><p>Use your REST API client to issue a GET at <code>http://localhost:8080/rest/external-task</code> to return all of the awaiting jobs. There should only be one job. Here is a sample response:</p>
+
+<pre><code class="language-json"> [
+    {
+        &quot;activityId&quot;: &quot;Task_17cys7b&quot;,
+        &quot;activityInstanceId&quot;: &quot;Task_17cys7b:11458f5a-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;errorMessage&quot;: null,
+        &quot;errorDetails&quot;: null,
+        &quot;executionId&quot;: &quot;11456849-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;id&quot;: &quot;1145dd7b-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;lockExpirationTime&quot;: null,
+        &quot;processDefinitionId&quot;: &quot;TwitterQAProcess:9:379764e0-728b-11e9-9c44-00155db2b504&quot;,
+        &quot;processDefinitionKey&quot;: &quot;TwitterQAProcess&quot;,
+        &quot;processInstanceId&quot;: &quot;11403825-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;retries&quot;: null,
+        &quot;suspended&quot;: false,
+        &quot;workerId&quot;: null,
+        &quot;topicName&quot;: &quot;notification&quot;,
+        &quot;tenantId&quot;: null,
+        &quot;priority&quot;: 0,
+        &quot;businessKey&quot;: null
+    }
+ ]
+</code></pre></li>
+
+<li><p>Now use your REST API client to issue a POST at <code>http://localhost:8080/rest/external-task/fetchAndLock</code> to fetch and lock the external task. Be sure to include this in the <code>Body</code>. You&rsquo;ll use the same <code>workerId</code> to complete the task next. It looks for jobs under the <code>publish</code> topic and locks it for 5 minutes.</p>
+
+<pre><code class="language-json">{
+  &quot;workerId&quot;: &quot;exercise11&quot;,
+  &quot;maxTasks&quot;: 1,
+  &quot;topics&quot;:
+	[{
+      &quot;topicName&quot;: &quot;notification&quot;,
+      &quot;lockDuration&quot;: 300000
+    }]
+}
+</code></pre>
+
+<p>You should get a response like this. Copy the <strong>id</strong> from the response for use in the next REST API call.</p>
+
+<pre><code class="language-json"> [
+    {
+        &quot;activityId&quot;: &quot;Task_17cys7b&quot;,
+        &quot;activityInstanceId&quot;: &quot;Task_17cys7b:11458f5a-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;errorMessage&quot;: null,
+        &quot;errorDetails&quot;: null,
+        &quot;executionId&quot;: &quot;11456849-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;id&quot;: &quot;1145dd7b-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;lockExpirationTime&quot;: &quot;2019-05-11T00:56:09.641-0400&quot;,
+        &quot;processDefinitionId&quot;: &quot;TwitterQAProcess:9:379764e0-728b-11e9-9c44-00155db2b504&quot;,
+        &quot;processDefinitionKey&quot;: &quot;TwitterQAProcess&quot;,
+        &quot;processInstanceId&quot;: &quot;11403825-728c-11e9-9c44-00155db2b504&quot;,
+        &quot;retries&quot;: null,
+        &quot;suspended&quot;: false,
+        &quot;workerId&quot;: &quot;exercise11&quot;,
+        &quot;topicName&quot;: &quot;notification&quot;,
+        &quot;tenantId&quot;: null,
+        &quot;variables&quot;: {},
+        &quot;priority&quot;: 0,
+        &quot;businessKey&quot;: null
+    }
+ ]
+</code></pre></li>
+
+<li><p>Now use your REST API client to issue a POST at <code>http://localhost:8080/rest/external-task/{id}/complete/</code>. Be sure to include a <code>Content-type</code> of <code>application/json</code> in the <code>Header</code>. Be sure to include <code>workerId</code> in the request <code>Body</code> in the call:</p>
+
+<pre><code class="language-json">{
+    &quot;workerId&quot;: &quot;exercise11&quot;
+	}
+</code></pre>
+
+<p>Did the process complete?</p></li>
+
+<li><p>Now let&rsquo;s start another instance using REST, this time making sure it goes to the <strong>Review tweet</strong> task where we&rsquo;ll then send a <strong>tweetWithdrawn</strong> message to demonstrate interrupting boundary event behavior. In your REST API client issue a POST at <code>http://localhost:8080/rest/process-definition/key/TwitterQAProcess/start</code>. Add a content that can be used to correlate with the withdraw message later on. It can look loke this:</p>
+
+<pre><code class="language-json">{&quot;variables&quot;: {&quot;content&quot;: {&quot;value&quot;: &quot;will be withdrawn later&quot;, &quot;type&quot;: &quot;String&quot;}}}
+</code></pre>
+
+<p>You should get a response like this.</p>
+
+<pre><code class="language-json"> {
+	&quot;links&quot;: [
+    	{
+        	&quot;method&quot;: &quot;GET&quot;,
+        	&quot;href&quot;: &quot;http://localhost:8080/rest/process-instance/924afee2-7296-11e9-9c44-00155db2b504&quot;,
+        	&quot;rel&quot;: &quot;self&quot;
+    	}
+	],
+    &quot;id&quot;: &quot;924afee2-7296-11e9-9c44-00155db2b504&quot;,
+    &quot;definitionId&quot;: &quot;TwitterQA:9:379764e0-728b-11e9-9c44-00155db2b504&quot;,
+    &quot;businessKey&quot;: null,
+    &quot;caseInstanceId&quot;: null,
+    &quot;ended&quot;: false,
+    &quot;suspended&quot;: false,
+    &quot;tenantId&quot;: null
+ }
+</code></pre></li>
+
+<li><p>Check <strong>Cockpit</strong> or <strong>Tasklist</strong> to confirm a new instance has started as it waiting at <strong>Review tweet</strong>.</p></li>
+
+<li><p>Issue a POST at <code>http://localhost:8080/rest/message</code> using the following in your request <code>Body</code>. Be sure to use the content as correlation keys.</p>
+
+<pre><code class="language-json">{
+		&quot;messageName&quot;: &quot;tweetWithdrawn&quot;,
+		&quot;correlationKeys&quot;: {&quot;content&quot;: {&quot;value&quot;: &quot;will be withdrawn later&quot;, &quot;type&quot;: &quot;String&quot;}}
+	}
+</code></pre></li>
+</ol>
+
+<p>Did the process complete? Congratulations, now you&rsquo;ve sent messages and tested processes using REST.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description-for-java-developers">Short description for Java developers</a></li>
+<li><a href="#detailed-steps-for-java-developers">Detailed steps for Java developers</a></li>
+<li><a href="#short-description-for-advanced-rest-users">Short description for advanced REST users</a></li>
+<li><a href="#detailed-steps-for-advanced-rest-users">Detailed steps for advanced REST users</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

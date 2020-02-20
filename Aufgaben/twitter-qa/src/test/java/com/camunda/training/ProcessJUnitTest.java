@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.claim;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.execute;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class ProcessJUnitTest {
 
 	@Test
 	@Deployment(resources = "twitterQA.bpmn")
-	public void testHappyPath() throws TwitterException {
+	public void testTweetOkay() throws TwitterException {
 		// Init Mocks
 		Mockito.when(twitterService.postTweet(Mockito.anyString())).thenReturn("Mock ID");
 
@@ -108,7 +108,7 @@ public class ProcessJUnitTest {
 
 	@Test
 	@Deployment(resources = "twitterQA.bpmn")
-	public void testSadPath() {
+	public void testTweetNotOkay() {
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put("okay", false);
@@ -123,7 +123,6 @@ public class ProcessJUnitTest {
 		assertThat(processInstance).isWaitingAt("TweetAbweisenTask");
 
 		// Complete Waiting Job
-
 		execute(job());
 
 		// Complete Extrenal Task
@@ -134,5 +133,57 @@ public class ProcessJUnitTest {
 
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded().hasPassed("TweetAbgewiesenEndEvent");
+	}
+
+	@Test
+	@Deployment(resources = "twitterQA.bpmn")
+	public void testChefTweet() throws TwitterException {
+		// Init Mocks
+		Mockito.when(twitterService.postTweet(Mockito.anyString())).thenReturn("Mock ID");
+
+		// Create Chef Message
+		ProcessInstance processInstance = runtimeService().createMessageCorrelation("ChefTweet")
+				.setVariable("content", "Chef Tweet Test - " + LocalDateTime.now().toString()).correlateWithResult()
+				.getProcessInstance();
+
+		// Make Sure Proccess is started
+		assertThat(processInstance).isStarted();
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetPostenTask");
+
+		// Complete Waiting Job
+		List<Job> jobList = jobQuery().processInstanceId(processInstance.getId()).list();
+		assertThat(jobList).hasSize(1);
+		Job job = jobList.get(0);
+		execute(job);
+
+		// Make assertions on the process instance
+		assertThat(processInstance).isEnded().hasPassed("TweetGepostetEndEvent").variables().containsEntry("tweet-id",
+				"Mock ID");
+		Mockito.verify(twitterService).postTweet(Mockito.anyString());
+	}
+
+	@Test
+	@Deployment(resources = "twitterQA.bpmn")
+	public void testTweetStorniert() throws TwitterException {
+		// Create a HashMap to put in variables for the process instance
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
+
+		// Start process with Java API and variables
+		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
+
+		// Make Sure Task is created and waiting
+		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
+
+		// Tweet Stornierungs Anfrage
+		runtimeService()//
+				.createMessageCorrelation("TweetStornieren")//
+				.processInstanceId(processInstance.getId())//
+				.correlateWithResult();
+
+		// Make assertions on the process instance
+		assertThat(processInstance).isEnded().hasPassed("TweetStorniertEndEvent");
 	}
 }
