@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  
+  <meta charset="utf-8" />
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <meta name="description" content="Lab instructions for the Camunda BPM for Java Developers training" />
+  <meta name="keywords" content="camunda, open source, free, Apache License, Apache 2.0, workflow, BPMN, BPMN 2.0, camunda.org, bpm, BPMS, engine, platform, process, automation, community, documentation" />
+  <meta name="author" content="Camunda Consulting" />
+
+  <title>Replace User Task by Business Rules Task</title>
+
+  <meta name="generator" content="Hugo 0.54.0" />
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body class="">
+
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-container">
+    <div class="navbar-header">
+      <a href="./index.html">
+        <span class="brand-logo"></span>
+        <span class="brand-name">Camunda</span>
+        <span class="site-name">BPM for Java Developers using Spring Boot</span>
+      </a>
+    </div>
+
+    
+
+    <button class="site-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    
+
+    <ul class="external-menu">
+      <li class="external"><a href="https://docs.camunda.org" target="_blank">docs.camunda.org</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="site-menu">
+  
+
+<ul class="site-menu-items">
+  
+  
+  <li >
+    <a href="./exercise0.html">Group Exercise 0</a>
+  </li>
+  
+  <li >
+    <a href="./exercise1.html">Exercise 1</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2a.html">Exercise 2a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise2b.html">Exercise 2b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3a.html">Exercise 3a</a>
+  </li>
+  
+  <li >
+    <a href="./exercise3b.html">Exercise 3b</a>
+  </li>
+  
+  <li >
+    <a href="./exercise4.html">Exercise 4</a>
+  </li>
+  
+  <li >
+    <a href="./exercise5.html">Exercise 5</a>
+  </li>
+  
+  <li >
+    <a href="./exercise6.html">Exercise 6</a>
+  </li>
+  
+  <li >
+    <a href="./exercise7.html">Exercise 7</a>
+  </li>
+  
+  <li >
+    <a href="./exercise8.html">Exercise 8</a>
+  </li>
+  
+  <li >
+    <a href="./exercise9.html">Exercise 9</a>
+  </li>
+  
+  <li >
+    <a href="./exercise10.html">Exercise 10 (optional)</a>
+  </li>
+  
+  <li >
+    <a href="./exercise11.html">Exercise 11</a>
+  </li>
+  
+  <li  class="active" >
+    <a href="./exercise12.html">Exercise 12</a>
+  </li>
+  
+</ul>
+
+<div class="meta">
+  <h4 class="header">
+    <span class="toggle glyphicon glyphicon-chevron-up"></span>
+    Options
+  </h4>
+
+  <div class="content">
+    <label for="version-select">Version:</label>
+    <select id="version-select" data-basepath="java-dev">
+      
+      <option >master</option>
+      
+      <option selected>2020-01</option>
+      
+      <option >2019-02</option>
+      
+      <option >2019-01</option>
+      
+    </select>
+  </div>
+</div>
+
+
+</div>
+
+
+<div class="page-wrapper">
+
+
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="col-xs-12 content-header">
+      <h1 class="page-title">Replace User Task by Business Rules Task</h1>
+    </div>
+
+    <div class="col-xs-12 content-text">
+      
+
+<h3 id="goal">Goal</h3>
+
+<p>In this lab you&rsquo;ll create a Decision Model and Notation (DMN) table and create rules to determine whether to approve or reject a submitted tweet based on some data. You&rsquo;ll then update the <strong>Twitter QA</strong> process and replace <strong>Review tweet</strong> user task with a business rule task and use the just created DMN in the business rules task to automate the review of tweets.</p>
+
+<h3 id="short-description">Short description</h3>
+
+<ul>
+<li>Create a decision table with rules to decide about approvement and rejection of tweets</li>
+<li>Save the decision table in your process application.</li>
+<li>Write a test method to test the decision table.</li>
+<li>Integrate the decison table with a business rule task into your process and test the process under JUnit.</li>
+<li>Restart the process application and run the process in the Tasklist.</li>
+</ul>
+
+<h3 id="detailed-steps">Detailed steps</h3>
+
+<ol>
+<li><p>Create a new DMN table in the Camunda Modeler. Do this by clicking on the page icon in the upper left corner and selcting <strong>Create new DMN table</strong> as shown below. You can also create a new DMN table by navigating to <strong>File &gt; New File &gt; DMN Table</strong>. You&rsquo;ll see an option of creating a DMN diagram (DRD) as well. Decision Requirements Diagram (DRD) allows you to create a rule heirachy where rule set outputs can feed into other rules sets thereby avoiding a single monolithic rule set. Rules sets are the building blocks of rule diagrams. For now, we&rsquo;ll stick with a single table.</p>
+
+<p><img src="./images/dmnNew.PNG" alt="" /></p></li>
+
+<li><p>Next, fill out the table:</p>
+
+<ol>
+<li>Change the <strong>Id</strong> and <strong>Name</strong> of the table to something more readable like <strong>tweetApproval</strong> and <strong>Tweet approval</strong>.</li>
+<li>You&rsquo;ll notice you&rsquo;re given one <strong>Input</strong> and one <strong>Output</strong>, each of type <code>string</code>. Update the generated <strong>Output</strong> column (denoted by a dash) and give <strong>Output Label</strong> and <strong>Output Name</strong> a value of <strong>approved</strong>. You can edit table entries by clicking on them. Change the type from <code>string</code> to <code>boolean</code> as shown below.
+<img src="./images/outputDMN.PNG" alt="" /></li>
+<li>Add another <strong>Input</strong> by clicking on the green plus (+) sign next to <strong>Input</strong>. You&rsquo;ll see the new input column has no name (just a dash) with a type <code>string</code>.</li>
+
+<li><p>In the first <strong>Input</strong> column enter an <strong>Input Label</strong> of <strong>Email</strong> and an <strong>Input Expression</strong> of <strong>email</strong>. You&rsquo;ll notice you can also fill an Input Variable though we won&rsquo;t be using it here.
+<img src="./images/inputDMN.PNG" alt="" /></p></li>
+
+<li><p>In the second <strong>Input</strong> column enter <strong>content</strong> for both <strong>Input Label</strong> and <strong>Input Expression</strong>. We&rsquo;ll need to create <strong>email</strong> and <strong>content</strong> variables to make this rule set work within the process.</p></li>
+
+<li><p>Add some rows with input and output data. Put in an email that will always be approved, like your own and an email that will always be rejected like <code>cannot.tweet@camunda.org</code>. Put in a row regarding content that will always be approved. Since we need to add some variability to the tweets we need to use some scripting for approving content. Right click on the <code>content</code> column of the newly create row and select <code>juel</code> for the scripting language. In the cell enter <code>content.contains(&quot;camunda rocks&quot;)</code>. Lastly, put in an otherwise row, one that is full of blanks (dashes) to capture anything else and elect to reject it. Your table should look something like this:<br />
+<img src="./images/dmnTable.PNG" alt="" /></p></li>
+
+<li><p>One more thing, we need to set the <strong>Hit Policy</strong> of the table. By default the <strong>Hit Policy</strong> is set to <strong>Unique (U)</strong> as you may have noticed in the upper left hand corner of the table. For this exercise we&rsquo;ll switch it to <strong>First (F)</strong>. The rules are evaluated from top to bottom and setting the <strong>Hit Policy</strong> to <strong>F</strong> means that the first rule to match will be taken and the rule set completes execution. You can find more information regarding <strong>Hit Policies</strong> <a href="https://docs.camunda.org/manual/latest/reference/dmn11/decision-table/hit-policy/">here</a>. Your table should now look like this:
+<img src="./images/dmnFirst.PNG" alt="" /></p></li>
+</ol></li>
+
+<li><p>Save the DMN table in <code>src/main/resources</code> of your project in your IDE using a name like <code>tweetApproval.dmn</code>. Make sure the new DMN file appears in your project.</p></li>
+
+<li><p>Write a JUnit test method to assure that your table works as expected. Create a new test method called <code>testTweetFromJakob</code> and annotate it with <code>@Test</code> and <code>@Deployment</code> to deploy the decision table into the engine. The secelton may look like this:</p>
+
+<pre><code class="language-java">  @Test
+  @Deployment(resources = &quot;tweetApproval.dmn&quot;)
+  public void testTweetFromJakob() {
+      
+  }
+</code></pre></li>
+
+<li><p>The quickest way to create the input for the decision is to use the camunda-bpm-assert shortcut <code>withVariables(key, value, nextkey, ...)</code>. Make sure to add values for all input columns. Then you can enter the variables directly into the <code>decisionService()</code> and call <code>evaluateDecisionByKey()</code>. The body of the method can look like this:</p>
+
+<pre><code class="language-java">    Map&lt;String, Object&gt; variables = withVariables(&quot;email&quot;, &quot;jakob.freund@camunda.com&quot;, &quot;content&quot;, &quot;this should be published&quot;);
+    DmnDecisionTableResult decisionResult = decisionService().evaluateDecisionTableByKey(&quot;tweetApproval&quot;, variables);
+</code></pre></li>
+
+<li><p>Now ypou can assert on the result. The return type is a wrapper around a list, so you can access the the first element to get your result. The assertion can look like</p>
+
+<pre><code class="language-java">    assertThat(decisionResult.getFirstResult()).contains(entry(&quot;approved&quot;, true));
+</code></pre>
+
+<p>Did you get the green bar running the test?</p></li>
+
+<li><p>When you run the complete Test class, the test coverage will complain that the coverage can only be calculated when all tests deploy the same BPMN resources. To do this, you can add the BPMN file to the deployment providing a String array with both resources:</p>
+
+<pre><code class="language-java">@Deployment(resources = {&quot;tweetApproval.dmn&quot;, &quot;TwitterQA.bpmn&quot;})
+</code></pre></li>
+
+<li><p>Update your <strong>Twitter QA</strong> process, changing <strong>Review tweet</strong> from a <strong>User Task</strong> to a <strong>Business Rule Task</strong>. You can also remove the <strong>Tweet withdrawn</strong> boundary event and <strong>Tweet withdrawn</strong> end node as well. Be sure to set <strong>Implementation</strong> of the <strong>Business Rule Task</strong> to <strong>DMN</strong>, use the rule reference of <strong>tweetApproval</strong> (or whatever you used), set the <strong>Result Variable</strong> to <strong>approved</strong>, and <strong>Map Decision Result</strong>, to <strong>singleEntry</strong> since we&rsquo;re only bring back one result of a simple type (in this case boolean). Your updated process should look something like this:
+<img src="./images/dmnComplete.PNG" alt="" /></p></li>
+
+<li><p>Run the JUnit test again. The <strong>testHappyPath</strong> will fail and will need some corrections for the changed process.</p>
+
+<ol>
+<li>The test complains that no decision definition is deployed. Add the DMN file to the resources as you&rsquo;ve done it for the <strong>testTweetFromJakob</strong> method.</li>
+<li>The expression <code>${email}</code> can not be evaluated. Add the variable to the map at the start of the process instance.</li>
+<li>The result of the task query contains 0 elements. As you&rsquo;ve changed the user task into a business rule task, you can remove the task query, its assertions and the completion of the user task.</li>
+<li>When the <strong>testHappyPath</strong> completes successfully, disable the <strong>testTweetWithdrawn</strong> method. Comment the <code>@Test</code> annotation, and JUnit will ignore this method.</li>
+<li>Do your tests run successfully?</li>
+</ol></li>
+
+<li><p>Edit the <strong>start-form.html</strong> and add a new input for the email.</p></li>
+
+<li><p>Restart the spring-boot application and start a new process instance from the Tasklist. Does the process work as expected?</p></li>
+</ol>
+
+<h3 id="optional">Optional</h3>
+
+<ol>
+<li>Install the <a href="https://github.com/camunda/feel-scala/tree/master/feel-engine-plugin#how-to-use-it" target="_blank">feel-scala community extension</a>.</li>
+<li>Configure the FEEL-Scala process engine plugin in your test and Spring Boot application.</li>
+<li>Use the <code>contains(string, matches)</code> function: The rule entry for &ldquo;tweet containing &lsquo;Camunda&rsquo; can be published&rdquo; is: <code>contains(content, &quot;Camunda&quot;)</code></li>
+</ol>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-toc">
+  <h3>On this Page:</h3>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#goal">Goal</a></li>
+<li><a href="#short-description">Short description</a></li>
+<li><a href="#detailed-steps">Detailed steps</a></li>
+<li><a href="#optional">Optional</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+    
+    <footer class="page-footer">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <p class="pull-right">
+            <a href="#" target="_self">Back to top</a>
+          </p>
+
+          <p>
+            <a href="http://camunda.org">camunda.org</a> and <a href="https://docs.camunda.org">docs.camunda.org</a> are part of camunda BPM
+            <span class="splitter">|</span>
+            Built by <a href="http://www.camunda.com">Camunda Consulting</a> &mdash; <a href="http://www.camunda.org/privacy.html">Privacy Statement</a> &mdash; camunda Services GmbH &copy; 2015-2019
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script type="text/javascript" src="./js/docs.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+    _gaq.push(['_setAccount', 'UA-39060941-1']);
+    _gaq.push(['_setDomainName', 'camunda.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
+

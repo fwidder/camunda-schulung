@@ -1,6 +1,7 @@
 package com.camunda.training;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.claim;
@@ -12,6 +13,8 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.decisionService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.withVariables;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
 import org.camunda.bpm.engine.impl.pvm.PvmException;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -55,44 +59,18 @@ public class ProcessJUnitTest {
 	}
 
 	@Test
-	@Deployment(resources = "twitterQA.bpmn")
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
 	public void testTweetOkay() throws TwitterException {
 		// Init Mocks
 		Mockito.when(twitterService.postTweet(Mockito.anyString())).thenReturn("Mock ID");
 
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
+		variables.put("content", "test toll - " + LocalDateTime.now().toString());
+		variables.put("email", "darf@senden.de");
 
 		// Start process with Java API and variables
 		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
-
-		// Make Sure Task is created and waiting
-		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
-
-		// Get Task List
-		List<Task> taskList = taskService().createTaskQuery()//
-				.taskCandidateGroup("TweetBewerter")//
-				.processInstanceId(processInstance.getId())//
-				.list();
-
-		// Check that Task List is not Empty
-		assertThat(taskList).isNotNull();
-		assertThat(taskList).hasSize(1);
-
-		// Get Task
-		Task task = taskList.get(0);
-
-		// Assert that Task is okay
-		assertThat(task).hasCandidateGroup("TweetBewerter").isNotAssigned();
-
-		// Claim Task
-		claim(task, "Chef");
-
-		// Complete Task
-		Map<String, Object> approvedMap = new HashMap<String, Object>();
-		approvedMap.put("okay", true);
-		taskService().complete(task.getId(), approvedMap);
 
 		// Make Sure Task is created and waiting
 		assertThat(processInstance).isWaitingAt("TweetPostenTask");
@@ -110,7 +88,7 @@ public class ProcessJUnitTest {
 	}
 
 	@Test
-	@Deployment(resources = "twitterQA.bpmn")
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
 	public void testTweetNotOkay() {
 		// Create a HashMap to put in variables for the process instance
 		Map<String, Object> variables = new HashMap<String, Object>();
@@ -139,7 +117,7 @@ public class ProcessJUnitTest {
 	}
 
 	@Test
-	@Deployment(resources = "twitterQA.bpmn")
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
 	public void testChefTweet() throws TwitterException {
 		// Init Mocks
 		Mockito.when(twitterService.postTweet(Mockito.anyString())).thenReturn("Mock ID");
@@ -167,31 +145,31 @@ public class ProcessJUnitTest {
 		Mockito.verify(twitterService).postTweet(Mockito.anyString());
 	}
 
+//	@Test
+//	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
+//	public void testTweetStorniert() throws TwitterException {
+//		// Create a HashMap to put in variables for the process instance
+//		Map<String, Object> variables = new HashMap<String, Object>();
+//		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
+//
+//		// Start process with Java API and variables
+//		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
+//
+//		// Make Sure Task is created and waiting
+//		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
+//
+//		// Tweet Stornierungs Anfrage
+//		runtimeService()//
+//				.createMessageCorrelation("TweetStornieren")//
+//				.processInstanceId(processInstance.getId())//
+//				.correlateWithResult();
+//
+//		// Make assertions on the process instance
+//		assertThat(processInstance).isEnded().hasPassed("TweetStorniertEndEvent");
+//	}
+
 	@Test
-	@Deployment(resources = "twitterQA.bpmn")
-	public void testTweetStorniert() throws TwitterException {
-		// Create a HashMap to put in variables for the process instance
-		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("content", "test Happy Path - " + LocalDateTime.now().toString());
-
-		// Start process with Java API and variables
-		ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("TwitterQAProcess", variables);
-
-		// Make Sure Task is created and waiting
-		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
-
-		// Tweet Stornierungs Anfrage
-		runtimeService()//
-				.createMessageCorrelation("TweetStornieren")//
-				.processInstanceId(processInstance.getId())//
-				.correlateWithResult();
-
-		// Make assertions on the process instance
-		assertThat(processInstance).isEnded().hasPassed("TweetStorniertEndEvent");
-	}
-
-	@Test
-	@Deployment(resources = "twitterQA.bpmn")
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
 	public void testTweetDupplicateError() throws TwitterException {
 		// Init Mocks
 		Mockito.when(twitterService.postTweet(Mockito.anyString()))
@@ -228,7 +206,7 @@ public class ProcessJUnitTest {
 	}
 
 	@Test
-	@Deployment(resources = "twitterQA.bpmn")
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
 	public void testTweetDupplicateAnpassen() throws TwitterException {
 		// Init Mocks
 		Mockito.when(twitterService.postTweet(Mockito.anyString()))
@@ -238,6 +216,7 @@ public class ProcessJUnitTest {
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put("okay", true);
 		variables.put("content", "test Sad Path");
+		variables.put("email", "darf@senden.de");
 
 		// Start process
 		ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("TwitterQAProcess")//
@@ -251,6 +230,38 @@ public class ProcessJUnitTest {
 		complete(task());
 
 		// Make Sure Task is created and waiting
-		assertThat(processInstance).isWaitingAt("TweetBewertenTask");
+		assertThat(processInstance).hasPassed("TweetBewertenTask");
+	}
+
+	@Test
+	@Deployment(resources = { "TweetBewerten.dmn", "twitterQA.bpmn" })
+	public void testTweetTweetBewertenDecision() throws TwitterException {
+		// Positive Test
+		Map<String, Object> variables = withVariables("content", "Ist voll okay!", "email", "darf@senden.de");
+		DmnDecisionTableResult decisionResult = decisionService().evaluateDecisionTableByKey("TweetBewertenDecision",
+				variables);
+
+		assertThat(decisionResult.getFirstResult()).contains(entry("okay", true));
+
+		variables = withVariables("content", "Ist voll toll!", "email", "we@auch.immer");
+		decisionResult = decisionService().evaluateDecisionTableByKey("TweetBewertenDecision", variables);
+
+		assertThat(decisionResult.getFirstResult()).contains(entry("okay", true));
+
+		// Negative Test
+		variables = withVariables("content", "Ist voll okay!", "email", "darf@nicht-senden.de");
+		decisionResult = decisionService().evaluateDecisionTableByKey("TweetBewertenDecision", variables);
+
+		assertThat(decisionResult.getFirstResult()).contains(entry("okay", false));
+
+		variables = withVariables("content", "Ist voll doof!", "email", "we@auch.immer");
+		decisionResult = decisionService().evaluateDecisionTableByKey("TweetBewertenDecision", variables);
+
+		assertThat(decisionResult.getFirstResult()).contains(entry("okay", false));
+
+		variables = withVariables("content", "Ist voll okay!", "email", "we@auch.immer");
+		decisionResult = decisionService().evaluateDecisionTableByKey("TweetBewertenDecision", variables);
+
+		assertThat(decisionResult.getFirstResult()).contains(entry("okay", false));
 	}
 }

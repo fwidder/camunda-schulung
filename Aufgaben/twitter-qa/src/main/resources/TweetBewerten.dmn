@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" id="Definitions_02frsz7" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+  <decision id="TweetBewertenDecision" name="Tweet Bewerten">
+    <extensionElements>
+      <biodi:bounds x="150" y="150" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable_1" hitPolicy="FIRST">
+      <input id="input_1" label="Email Adresse">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text>email</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0mqauc6" label="Inhalt">
+        <inputExpression id="LiteralExpression_1b3z7g8" typeRef="string">
+          <text>content</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" label="okay" name="okay" typeRef="boolean" />
+      <rule id="DecisionRule_18k7i1m">
+        <inputEntry id="UnaryTests_1mi87ue">
+          <text>"darf@senden.de"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1scd3qv">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1bprdyy" expressionLanguage="juel">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0palr03">
+        <inputEntry id="UnaryTests_1mj7hwf">
+          <text>"darf@nicht-senden.de"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0u3t9y8">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1475svo">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0oahjyg">
+        <inputEntry id="UnaryTests_0w4rngo">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vlau4f" expressionLanguage="juel">
+          <text>content.contains("toll")</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_11kqq90" expressionLanguage="juel">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1qtqbyg">
+        <inputEntry id="UnaryTests_1etic55">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07jdg9d" expressionLanguage="juel">
+          <text>content.contains("doof")</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gdsigy">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0eimti5">
+        <inputEntry id="UnaryTests_14ju6oq">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zypn6z">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10hes4p">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
