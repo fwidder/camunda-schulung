@@ -11,7 +11,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/rest/process-definition",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rest",
+						"process-definition"
+					]
 				}
 			},
 			"response": []
@@ -19,10 +28,38 @@
 		{
 			"name": "Start Twitter",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"variables\": {\n        \"content\": {\n            \"value\": \"Rest Test Camunda\",\n            \"type\": \"String\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/rest/process-definition/key/TwitterQAProcess/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"rest",
+						"process-definition",
+						"key",
+						"TwitterQAProcess",
+						"start"
+					]
 				}
 			},
 			"response": []
@@ -33,7 +70,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/rest/process-instance/fee785c6-53c5-11ea-98a2-0242d2119bcd",
+					"raw": "http://localhost:8080/rest/task",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -41,8 +78,7 @@
 					"port": "8080",
 					"path": [
 						"rest",
-						"process-instance",
-						"fee785c6-53c5-11ea-98a2-0242d2119bcd"
+						"task"
 					]
 				}
 			},
@@ -62,7 +98,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"userId\": \"demo\"}",
+					"raw": "{\n    \"userId\": \"demo\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -70,7 +106,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/rest/task/fee7acdb-53c5-11ea-98a2-0242d2119bcd/claim",
+					"raw": "http://localhost:8080/rest/task/ca30464e-53c7-11ea-98a2-0242d2119bcd/claim",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -79,7 +115,7 @@
 					"path": [
 						"rest",
 						"task",
-						"fee7acdb-53c5-11ea-98a2-0242d2119bcd",
+						"ca30464e-53c7-11ea-98a2-0242d2119bcd",
 						"claim"
 					]
 				}
@@ -100,7 +136,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"variables\":\n    {\n    \"okay\": {\"value\": true}\n    }\n}",
+					"raw": "{\n    \"variables\": {\n        \"okay\": {\n            \"value\": false\n        }\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -108,7 +144,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/rest/task/fee7acdb-53c5-11ea-98a2-0242d2119bcd/complete",
+					"raw": "http://localhost:8080/rest/task/ca30464e-53c7-11ea-98a2-0242d2119bcd/complete",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -117,7 +153,7 @@
 					"path": [
 						"rest",
 						"task",
-						"fee7acdb-53c5-11ea-98a2-0242d2119bcd",
+						"ca30464e-53c7-11ea-98a2-0242d2119bcd",
 						"complete"
 					]
 				}
