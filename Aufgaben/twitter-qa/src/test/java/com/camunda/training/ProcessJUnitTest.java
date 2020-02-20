@@ -9,6 +9,8 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.job;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.jobQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.externalTask;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -123,6 +125,12 @@ public class ProcessJUnitTest {
 		// Complete Waiting Job
 
 		execute(job());
+
+		// Complete Extrenal Task
+		assertThat(processInstance).isWaitingAt("TweetAbweisenTask").//
+				externalTask().//
+				hasTopicName("abgelehnteTweets");
+		complete(externalTask());
 
 		// Make assertions on the process instance
 		assertThat(processInstance).isEnded().hasPassed("TweetAbgewiesenEndEvent");
